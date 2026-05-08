@@ -10,7 +10,7 @@ services:
     hostname: ${HOSTNAME:-litellm-proxy}
     networks:
       litellm-network:
-        ipv4_address: ${CONTAINER_IP:-192.168.111.15}
+        ipv4_address: ${CONTAINER_IP:-192.168.111.50}
     restart: unless-stopped
     environment:
       - TZ=${TIMEZONE:-UTC}
@@ -19,9 +19,9 @@ networks:
   litellm-network:
     driver: macvlan
     driver_opts:
-      parent: ${NETWORK_INTERFACE:-eth0}
+      parent: ${NETWORK_INTERFACE:-enp2s0}
     ipam:
       config:
         - subnet: ${NETWORK_SUBNET:-192.168.111.0/24}
           gateway: ${NETWORK_GATEWAY:-192.168.111.254}
-          ip_range: ${NETWORK_IP_RANGE:-192.168.111.15/32}
+          ip_range: ${NETWORK_IP_RANGE:-192.168.111.48/29}
