@@ -19,6 +19,54 @@ A Docker container that runs a LiteLLM proxy, allowing Claude Code CLI to use Go
 - **Model mapping** - All Claude models → Gemini 2.5 Flash
 - **Docker-based** - Easy deployment with Docker Compose or Portainer
 
+## Example Deployment
+
+One proxy server can serve multiple Claude Code clients across different platforms and use cases:
+
+```
+                           ┌─────────────────────────────────┐
+                           │   Docker Server (Portainer)     │
+                           │                                 │
+                           │  ┌───────────────────────────┐  │
+    ┌──────────────────────┼─►│  LiteLLM Proxy Container  │  │
+    │                      │  │  (192.168.1.100:4000)     │──┼──► Google Gemini API
+    │                      │  │                           │  │    (Free Tier)
+    │                      │  │  • Deployed via GitHub    │  │
+    │                      │  │  • Auto-start on boot     │  │
+    │  Claude Code CLI     │  └───────────────────────────┘  │
+    │  Clients             │                                 │
+    │                      └─────────────────────────────────┘
+    │
+    │  ┌────────────────────────────────────────┐
+    ├──┤  Windows Desktop                       │
+    │  │  • Claude Code CLI                     │
+    │  │  • VS Code extension                   │
+    │  │  • General development                 │
+    │  └────────────────────────────────────────┘
+    │
+    │  ┌────────────────────────────────────────┐
+    ├──┤  Linux Laptop                          │
+    │  │  • Claude Code CLI                     │
+    │  │  • Terminal-based development          │
+    │  └────────────────────────────────────────┘
+    │
+    │  ┌────────────────────────────────────────┐
+    └──┤  Home Assistant OS                     │
+       │  ┌──────────────────────────────────┐  │
+       │  │  Dev Container (Docker)          │  │
+       │  │  • Claude Code CLI               │  │
+       │  │  • Home Assistant development    │  │
+       │  └──────────────────────────────────┘  │
+       └────────────────────────────────────────┘
+```
+
+**Benefits of this setup:**
+- ✅ Single Google API key shared across all devices
+- ✅ Consistent model access from any machine
+- ✅ Easy to manage (update config once, affects all clients)
+- ✅ Works with containerized development environments
+- ✅ No API keys stored on client machines
+
 ## Quick Start
 
 ### Prerequisites
