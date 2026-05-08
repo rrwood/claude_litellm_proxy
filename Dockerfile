@@ -3,6 +3,7 @@ FROM alpine:latest
 # Build arguments with defaults
 ARG USERNAME=litellm
 ARG USER_PASSWORD=changeme123
+ARG CONTAINER_HOSTNAME=litellm-proxy
 
 # Make USERNAME available at runtime
 ENV USERNAME=${USERNAME}
@@ -22,6 +23,9 @@ RUN apk update && apk add --no-cache \
 RUN useradd -m -s /bin/bash ${USERNAME} && \
     echo "${USERNAME}:${USER_PASSWORD}" | chpasswd && \
     echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+# Set hostname for Alpine Linux
+RUN echo "${CONTAINER_HOSTNAME}" > /etc/hostname
 
 # Configure SSH
 RUN mkdir -p /run/sshd && \

@@ -6,14 +6,16 @@ services:
       args:
         USERNAME: ${USERNAME:-litellm}
         USER_PASSWORD: ${USER_PASSWORD:-changeme123}
+        CONTAINER_HOSTNAME: ${HOSTNAME:-litellm-proxy}
     container_name: ${CONTAINER_NAME:-litellm-proxy}
-    hostname: ${HOSTNAME:-litellm-proxy}
+    hostname: "${HOSTNAME:-litellm-proxy}"
     networks:
       macvlan-for-direct-access:
         ipv4_address: ${CONTAINER_IP:-192.168.111.50}
     restart: unless-stopped
     environment:
       - TZ=${TIMEZONE:-UTC}
+      - BUILD_HOSTNAME=${HOSTNAME:-litellm-proxy}
 
 networks:
   macvlan-for-direct-access:
