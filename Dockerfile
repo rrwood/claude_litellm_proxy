@@ -24,7 +24,7 @@ RUN useradd -m -s /bin/bash ${USERNAME} && \
     echo "${USERNAME}:${USER_PASSWORD}" | chpasswd && \
     echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-# Set hostname for Alpine Linux
+# Set hostname (done late to ensure no conflicts)
 RUN echo "${CONTAINER_HOSTNAME}" > /etc/hostname
 
 # Configure SSH
