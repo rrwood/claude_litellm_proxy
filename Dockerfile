@@ -62,8 +62,12 @@ RUN chmod +x /home/${USERNAME}/.config/litellm/start-litellm.sh
 # Add PATH for Python local binaries
 RUN echo 'export PATH="$HOME/.local/bin:$PATH"' >> /home/${USERNAME}/.bashrc
 
-# Copy entrypoint script
+# Setup welcome message
 USER root
+COPY scripts/welcome-motd.sh /etc/profile.d/welcome.sh
+RUN chmod +x /etc/profile.d/welcome.sh
+
+# Copy entrypoint script
 COPY scripts/entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
