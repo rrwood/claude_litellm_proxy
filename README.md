@@ -86,6 +86,7 @@ One proxy server can serve multiple Claude Code clients across different platfor
    - Build method: **Repository**
    - Repository URL: `https://github.com/rrwood/claude_litellm_proxy`
    - Reference: `refs/heads/main`
+   - Compose path: `docker-compose.yml` (or `docker-compose.external-network.yml` for existing networks)
    - Upload your `.env` file
 
 3. **Deploy** and SSH to add Google API key:

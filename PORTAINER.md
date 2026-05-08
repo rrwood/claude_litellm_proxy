@@ -56,7 +56,7 @@ TIMEZONE=America/New_York                 # Your timezone
 3. **Repository Settings**
    - **Repository URL:** `https://github.com/rrwood/claude_litellm_proxy`
    - **Repository reference:** `refs/heads/main`
-   - **Compose path:** `docker-compose.yml`
+   - **Compose path:** `docker-compose.yml` (or `docker-compose.external-network.yml` if using existing network)
    - **Authentication:** Not required (public repository)
 
 4. **Upload Environment File**
@@ -164,6 +164,26 @@ The default configuration uses macvlan networking for direct network access. The
 ip addr show                    # Find your interface (enp2s0, eth0, ens33, etc.)
 ip route | grep default         # Find your gateway
 ```
+
+### Using Existing Macvlan Network
+
+If you already have a `macvlan-for-direct-access` network created on your Docker host, use the alternative compose file:
+
+1. **In Portainer stack configuration**, change:
+   - **Compose path:** `docker-compose.external-network.yml`
+
+2. **In your .env file**, you only need:
+   ```env
+   CONTAINER_IP=192.168.111.50
+   USER_PASSWORD=your_secure_password
+   ```
+
+3. Deploy normally - Portainer will use your existing network instead of creating a new one.
+
+**When to use this:**
+- You have multiple containers sharing the same macvlan network
+- The network was created manually or by another stack
+- You want to reuse an existing network configuration
 
 ### Using Bridge Networking (Alternative)
 

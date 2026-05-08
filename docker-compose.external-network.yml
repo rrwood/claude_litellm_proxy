@@ -1,0 +1,21 @@
+services:
+  litellm-proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        USERNAME: ${USERNAME:-litellm}
+        USER_PASSWORD: ${USER_PASSWORD:-changeme123}
+    container_name: ${CONTAINER_NAME:-litellm-proxy}
+    hostname: ${HOSTNAME:-litellm-proxy}
+    networks:
+      macvlan-for-direct-access:
+        ipv4_address: ${CONTAINER_IP:-192.168.111.50}
+    restart: unless-stopped
+    environment:
+      - TZ=${TIMEZONE:-UTC}
+
+networks:
+  macvlan-for-direct-access:
+    # Use existing network (does not create)
+    external: true
