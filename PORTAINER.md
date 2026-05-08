@@ -29,10 +29,10 @@ HOSTNAME=litellm-proxy
 CONTAINER_IP=192.168.1.100                 # ⚠️ Change to available IP
 
 # Network Settings (adjust for your network)
-NETWORK_INTERFACE=eth0                     # Your Docker host interface
-NETWORK_SUBNET=192.168.1.0/24             # Your network subnet
-NETWORK_GATEWAY=192.168.1.1               # Your router IP
-NETWORK_IP_RANGE=192.168.1.100/29         # IP range for this stack
+NETWORK_INTERFACE=enp2s0                   # Your Docker host interface (eth0, enp2s0, ens33, etc.)
+NETWORK_SUBNET=192.168.111.0/24           # Your network subnet
+NETWORK_GATEWAY=192.168.111.254           # Your router IP
+NETWORK_IP_RANGE=192.168.111.48/29        # IP range for this stack (.48-.55)
 
 # Timezone
 TIMEZONE=America/New_York                 # Your timezone
@@ -40,8 +40,9 @@ TIMEZONE=America/New_York                 # Your timezone
 
 **Important:** 
 - Change `USER_PASSWORD` to a strong password
-- Set `CONTAINER_IP` to an available IP on your network
+- Set `CONTAINER_IP` to an available IP on your network (e.g., .49-.54 from the /29 range)
 - Adjust network settings to match your environment
+- Find your interface with: `ip addr show` on the Docker host
 
 ### Step 2: Create Stack in Portainer
 
@@ -137,11 +138,11 @@ USERNAME = litellm
 USER_PASSWORD = your_secure_password
 CONTAINER_NAME = litellm-proxy
 HOSTNAME = litellm-proxy
-CONTAINER_IP = 192.168.1.100
-NETWORK_INTERFACE = eth0
-NETWORK_SUBNET = 192.168.1.0/24
-NETWORK_GATEWAY = 192.168.1.1
-NETWORK_IP_RANGE = 192.168.1.100/29
+CONTAINER_IP = 192.168.111.50
+NETWORK_INTERFACE = enp2s0
+NETWORK_SUBNET = 192.168.111.0/24
+NETWORK_GATEWAY = 192.168.111.254
+NETWORK_IP_RANGE = 192.168.111.48/29
 TIMEZONE = America/New_York
 ```
 
@@ -160,7 +161,7 @@ The default configuration uses macvlan networking for direct network access. The
 
 ```bash
 # On your Docker host
-ip addr show                    # Find your interface (eth0, ens33, etc.)
+ip addr show                    # Find your interface (enp2s0, eth0, ens33, etc.)
 ip route | grep default         # Find your gateway
 ```
 

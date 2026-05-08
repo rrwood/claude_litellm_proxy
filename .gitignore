@@ -1,5 +1,9 @@
 # Environment files with secrets
 .env
+*.env
+
+# Local network documentation (specific to deployment)
+NETWORK_SETUP.md
 
 # Docker volumes
 workspace/
