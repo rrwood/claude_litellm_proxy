@@ -69,13 +69,49 @@ One proxy server can serve multiple Claude Code clients across different platfor
 
 ## Quick Start
 
-### Prerequisites
+### 🚀 Portainer Deployment (Recommended)
+
+**The easiest way - no command line needed!**
+
+1. **Download** [.env.example](https://github.com/rrwood/claude_litellm_proxy/blob/main/.env.example), save as `.env`, and customize:
+   ```env
+   CONTAINER_IP=192.168.1.100          # Change to available IP
+   USER_PASSWORD=your_secure_password  # Change this!
+   NETWORK_SUBNET=192.168.1.0/24      # Your network
+   NETWORK_GATEWAY=192.168.1.1        # Your router
+   ```
+
+2. **Create stack** in Portainer:
+   - Stacks → Add stack → Name: `litellm-proxy`
+   - Build method: **Repository**
+   - Repository URL: `https://github.com/rrwood/claude_litellm_proxy`
+   - Reference: `refs/heads/main`
+   - Upload your `.env` file
+
+3. **Deploy** and SSH to add Google API key:
+   ```bash
+   ssh litellm@192.168.1.100  # Use your CONTAINER_IP
+   nano ~/.config/litellm/.env
+   # Add: GOOGLE_API_KEY=your_actual_key
+   ```
+
+4. **Restart** in Portainer and you're done! 🎉
+
+📖 **Detailed guide:** [PORTAINER.md](PORTAINER.md)
+
+---
+
+### 🐳 Docker Compose Deployment (Alternative)
+
+**For command-line users:**
+
+#### Prerequisites
 
 - Docker and Docker Compose installed
 - A network with static IP capability (or use bridge networking)
 - Google API key from https://aistudio.google.com/app/apikey (free)
 
-### 1. Clone and Configure
+#### 1. Clone and Configure
 
 ```bash
 git clone https://github.com/rrwood/claude_litellm_proxy.git
@@ -86,7 +122,7 @@ cp .env.example .env
 nano .env  # Update network settings for your environment
 ```
 
-### 2. Deploy
+#### 2. Deploy
 
 ```bash
 docker-compose up -d
@@ -137,7 +173,8 @@ See [CLIENT_SETUP.md](CLIENT_SETUP.md) for detailed client configuration.
 
 ## Documentation
 
-- **[QUICKSTART.md](QUICKSTART.md)** - Fast deployment guide
+- **[PORTAINER.md](PORTAINER.md)** - Complete Portainer deployment guide ⭐ **Recommended**
+- **[QUICKSTART.md](QUICKSTART.md)** - Fast docker-compose deployment
 - **[CLIENT_SETUP.md](CLIENT_SETUP.md)** - Configure Claude Code clients
 - **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Common issues and solutions
 
