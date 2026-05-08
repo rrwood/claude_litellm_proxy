@@ -1,0 +1,27 @@
+services:
+  litellm-proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        USERNAME: ${USERNAME:-litellm}
+        USER_PASSWORD: ${USER_PASSWORD:-changeme123}
+    container_name: ${CONTAINER_NAME:-litellm-proxy}
+    hostname: ${HOSTNAME:-litellm-proxy}
+    networks:
+      litellm-network:
+        ipv4_address: ${CONTAINER_IP:-192.168.1.100}
+    restart: unless-stopped
+    environment:
+      - TZ=${TIMEZONE:-UTC}
+
+networks:
+  litellm-network:
+    driver: macvlan
+    driver_opts:
+      parent: ${NETWORK_INTERFACE:-eth0}
+    ipam:
+      config:
+        - subnet: ${NETWORK_SUBNET:-192.168.1.0/24}
+          gateway: ${NETWORK_GATEWAY:-192.168.1.1}
+          ip_range: ${NETWORK_IP_RANGE:-192.168.1.100/29}
