@@ -5,11 +5,6 @@ set -e
 USERNAME=${USERNAME:-litellm}
 USER_HOME="/home/${USERNAME}"
 
-# Set hostname from environment variable (Alpine Linux needs this at runtime)
-if [ -n "$BUILD_HOSTNAME" ]; then
-    hostname "$BUILD_HOSTNAME"
-fi
-
 # Start SSH service
 /usr/sbin/sshd
 
