@@ -1,71 +1,6 @@
 # Claude LiteLLM Proxy
 
-**Use Claude Code CLI with free Gemini models via LiteLLM proxy**
-
-A Docker container that runs a LiteLLM proxy, allowing Claude Code CLI to use Google's free Gemini API instead of paid Claude API credits. All Claude model requests are automatically translated to Gemini 2.5 Flash.
-
-## Why Use This?
-
-- **Free**: Use Google's generous Gemini free tier instead of paying for Claude API
-- **Drop-in replacement**: Claude Code CLI works exactly the same, just point it to this proxy
-- **Centralized**: Run one proxy server, connect multiple Claude Code clients
-- **Simple**: Pre-configured and ready to deploy
-
-## Features
-
-- **LiteLLM Proxy** with Anthropic-compatible API
-- **Auto-start** LiteLLM on container boot
-- **SSH access** for configuration and troubleshooting
-- **Model mapping** - All Claude models → Gemini 2.5 Flash
-- **Docker-based** - Easy deployment with Docker Compose or Portainer
-
-## Example Deployment
-
-One proxy server can serve multiple Claude Code clients across different platforms and use cases:
-
-```
-                           ┌─────────────────────────────────┐
-                           │   Docker Server (Portainer)     │
-                           │                                 │
-                           │  ┌───────────────────────────┐  │
-    ┌──────────────────────┼─►│  LiteLLM Proxy Container  │  │
-    │                      │  │  (192.168.1.100:4000)     │──┼──► Google Gemini API
-    │                      │  │                           │  │    (Free Tier)
-    │                      │  │  • Deployed via GitHub    │  │
-    │                      │  │  • Auto-start on boot     │  │
-    │  Claude Code CLI     │  └───────────────────────────┘  │
-    │  Clients             │                                 │
-    │                      └─────────────────────────────────┘
-    │
-    │  ┌────────────────────────────────────────┐
-    ├──┤  Windows Desktop                       │
-    │  │  • Claude Code CLI                     │
-    │  │  • VS Code extension                   │
-    │  │  • General development                 │
-    │  └────────────────────────────────────────┘
-    │
-    │  ┌────────────────────────────────────────┐
-    ├──┤  Linux Laptop                          │
-    │  │  • Claude Code CLI                     │
-    │  │  • Terminal-based development          │
-    │  └────────────────────────────────────────┘
-    │
-    │  ┌────────────────────────────────────────┐
-    └──┤  Home Assistant OS                     │
-       │  ┌──────────────────────────────────┐  │
-       │  │  Dev Container (Docker)          │  │
-       │  │  • Claude Code CLI               │  │
-       │  │  • Home Assistant development    │  │
-       │  └──────────────────────────────────┘  │
-       └────────────────────────────────────────┘
-```
-
-**Benefits of this setup:**
-- ✅ Single Google API key shared across all devices
-- ✅ Consistent model access from any machine
-- ✅ Easy to manage (update config once, affects all clients)
-- ✅ Works with containerized development environments
-- ✅ No API keys stored on client machines
+A Docker container running LiteLLM proxy that translates Anthropic API calls to Google's Gemini API. Point Claude Code CLI at this proxy to use free Gemini 2.5 Flash instead of paid Claude API credits. Deploy once via Portainer or Docker Compose, then connect multiple Claude Code clients from any machine on your network. All Claude model requests (Opus, Sonnet, Haiku) are automatically mapped to Gemini 2.5 Flash with support for SSH access, auto-start on boot, and simple environment-based configuration.
 
 ## Quick Start
 
@@ -193,14 +128,14 @@ The default `docker-compose.yml` **auto-creates** a macvlan network for direct n
 
 ### Using Existing Macvlan Network
 
-If you already have a macvlan network (e.g., `macvlan-for-direct-access`), use the override:
+If you already have a `macvlan-for-direct-access` network:
 
+**Portainer:** Use compose path `docker-compose.external-network.yml`
+
+**Docker Compose:**
 ```bash
-cp docker-compose.override.yml.example docker-compose.override.yml
-docker-compose up -d
+docker-compose -f docker-compose.external-network.yml up -d
 ```
-
-This tells Docker Compose to use your existing network instead of creating a new one.
 
 ### Using Bridge Networking (Alternative)
 
