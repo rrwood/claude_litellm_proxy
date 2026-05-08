@@ -1,12 +1,17 @@
 #!/bin/bash
 set -e
 
+# Get the actual username from build args (defaults to litellm)
+USERNAME=${USERNAME:-litellm}
+USER_HOME="/home/${USERNAME}"
+
 # Start SSH service
-sudo /usr/sbin/sshd
+/usr/sbin/sshd
 
 # Check if .env file exists, if not create from example
-if [ ! -f "$HOME/.config/litellm/.env" ]; then
-    cp "$HOME/.config/litellm/.env.example" "$HOME/.config/litellm/.env"
+if [ ! -f "$USER_HOME/.config/litellm/.env" ]; then
+    cp "$USER_HOME/.config/litellm/.env.example" "$USER_HOME/.config/litellm/.env"
+    chown ${USERNAME}:${USERNAME} "$USER_HOME/.config/litellm/.env"
     echo "================================================"
     echo "IMPORTANT: Configure your Google API key"
     echo "================================================"
@@ -15,6 +20,6 @@ if [ ! -f "$HOME/.config/litellm/.env" ]; then
     echo ""
 fi
 
-# Start LiteLLM proxy
+# Start LiteLLM proxy as the user
 echo "Starting LiteLLM proxy on port 4000..."
-exec "$HOME/.config/litellm/start-litellm.sh"
+exec su - ${USERNAME} -c "$USER_HOME/.config/litellm/start-litellm.sh"

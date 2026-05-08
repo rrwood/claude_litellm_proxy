@@ -4,6 +4,9 @@ FROM alpine:latest
 ARG USERNAME=litellm
 ARG USER_PASSWORD=changeme123
 
+# Make USERNAME available at runtime
+ENV USERNAME=${USERNAME}
+
 # Install system packages
 RUN apk update && apk add --no-cache \
     bash \
