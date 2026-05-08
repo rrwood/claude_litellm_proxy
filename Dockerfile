@@ -12,6 +12,7 @@ ENV USERNAME=${USERNAME}
 RUN apk update && apk add --no-cache \
     bash \
     curl \
+    nano \
     python3 \
     py3-pip \
     openssh \

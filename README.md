@@ -2,6 +2,53 @@
 
 A Docker container running LiteLLM proxy that translates Anthropic API calls to Google's Gemini API. Point Claude Code CLI at this proxy to use free Gemini 2.5 Flash instead of paid Claude API credits. Deploy once via Portainer or Docker Compose, then connect multiple Claude Code clients from any machine on your network. All Claude model requests (Opus, Sonnet, Haiku) are automatically mapped to Gemini 2.5 Flash with support for SSH access, auto-start on boot, and simple environment-based configuration.
 
+## Example Deployment
+
+One proxy server can serve multiple Claude Code clients across different platforms:
+
+```
+                           ┌─────────────────────────────────┐
+                           │   Docker Server (Portainer)     │
+                           │                                 │
+                           │  ┌───────────────────────────┐  │
+    ┌──────────────────────┼─►│  LiteLLM Proxy Container  │  │
+    │                      │  │  (192.168.1.100:4000)     │──┼──► Google Gemini API
+    │                      │  │                           │  │    (Free Tier)
+    │                      │  │  • Deployed via GitHub    │  │
+    │                      │  │  • Auto-start on boot     │  │
+    │  Claude Code CLI     │  └───────────────────────────┘  │
+    │  Clients             │                                 │
+    │                      └─────────────────────────────────┘
+    │
+    │  ┌────────────────────────────────────────┐
+    ├──┤  Windows Desktop                       │
+    │  │  • Claude Code CLI                     │
+    │  │  • VS Code extension                   │
+    │  │  • General development                 │
+    │  └────────────────────────────────────────┘
+    │
+    │  ┌────────────────────────────────────────┐
+    ├──┤  Linux Laptop                          │
+    │  │  • Claude Code CLI                     │
+    │  │  • Terminal-based development          │
+    │  └────────────────────────────────────────┘
+    │
+    │  ┌────────────────────────────────────────┐
+    └──┤  Home Assistant OS                     │
+       │  ┌──────────────────────────────────┐  │
+       │  │  Dev Container (Docker)          │  │
+       │  │  • Claude Code CLI               │  │
+       │  │  • Home Assistant development    │  │
+       │  └──────────────────────────────────┘  │
+       └────────────────────────────────────────┘
+```
+
+**Benefits:**
+- ✅ Single Google API key shared across all devices
+- ✅ Consistent model access from any machine
+- ✅ Easy to manage (update config once, affects all clients)
+- ✅ No API keys stored on client machines
+
 ## Quick Start
 
 ### 🚀 Portainer Deployment (Recommended)
