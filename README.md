@@ -182,12 +182,24 @@ See [CLIENT_SETUP.md](CLIENT_SETUP.md) for detailed client configuration.
 
 ### Network Settings
 
-The default `docker-compose.yml` uses macvlan networking for direct network access. Update `.env` with your network settings:
+The default `docker-compose.yml` **auto-creates** a macvlan network for direct network access. Update `.env` with your network settings:
 
 - `CONTAINER_IP` - Static IP for the container
-- `NETWORK_SUBNET` - Your network subnet (e.g., 192.168.1.0/24)
-- `NETWORK_GATEWAY` - Your network gateway
-- `NETWORK_INTERFACE` - Host interface (e.g., eth0)
+- `NETWORK_SUBNET` - Your network subnet (e.g., 192.168.111.0/24)
+- `NETWORK_GATEWAY` - Your network gateway (e.g., 192.168.111.254)
+- `NETWORK_INTERFACE` - Host interface (e.g., enp2s0, eth0)
+- `NETWORK_IP_RANGE` - IP range for macvlan (e.g., 192.168.111.48/29)
+
+### Using Existing Macvlan Network
+
+If you already have a macvlan network (e.g., `macvlan-for-direct-access`), use the override:
+
+```bash
+cp docker-compose.override.yml.example docker-compose.override.yml
+docker-compose up -d
+```
+
+This tells Docker Compose to use your existing network instead of creating a new one.
 
 ### Using Bridge Networking (Alternative)
 

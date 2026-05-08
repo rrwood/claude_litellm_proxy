@@ -9,14 +9,17 @@ services:
     container_name: ${CONTAINER_NAME:-litellm-proxy}
     hostname: ${HOSTNAME:-litellm-proxy}
     networks:
-      litellm-network:
+      macvlan-for-direct-access:
         ipv4_address: ${CONTAINER_IP:-192.168.111.50}
     restart: unless-stopped
     environment:
       - TZ=${TIMEZONE:-UTC}
 
 networks:
-  litellm-network:
+  macvlan-for-direct-access:
+    # Default: auto-create network (works out-of-the-box)
+    # To use existing network instead, comment out the config below
+    # and uncomment: external: true
     driver: macvlan
     driver_opts:
       parent: ${NETWORK_INTERFACE:-enp2s0}
@@ -25,3 +28,4 @@ networks:
         - subnet: ${NETWORK_SUBNET:-192.168.111.0/24}
           gateway: ${NETWORK_GATEWAY:-192.168.111.254}
           ip_range: ${NETWORK_IP_RANGE:-192.168.111.48/29}
+    # external: true  # Uncomment to use existing network instead
