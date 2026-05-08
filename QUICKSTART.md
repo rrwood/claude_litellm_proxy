@@ -12,7 +12,7 @@ Deploy the Claude LiteLLM proxy in 5 minutes.
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/claude_litellm_proxy.git
+git clone https://github.com/rrwood/claude_litellm_proxy.git
 cd claude_litellm_proxy
 
 # Copy environment template

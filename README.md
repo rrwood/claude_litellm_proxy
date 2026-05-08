@@ -30,7 +30,7 @@ A Docker container that runs a LiteLLM proxy, allowing Claude Code CLI to use Go
 ### 1. Clone and Configure
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/claude_litellm_proxy.git
+git clone https://github.com/rrwood/claude_litellm_proxy.git
 cd claude_litellm_proxy
 
 # Copy and edit environment file
