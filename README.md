@@ -154,11 +154,54 @@ claude          # Start using the proxy!
 
 See [CLIENT_SETUP.md](CLIENT_SETUP.md) for detailed client configuration.
 
+## Windows Quick Start
+
+The `windows_scripts/` folder provides a one-command launcher for Windows users:
+
+1. **Copy** `windows_scripts/.env.example` to `windows_scripts/.env` and set your proxy IP:
+   ```env
+   ANTHROPIC_BASE_URL=http://YOUR_CONTAINER_IP:4000
+   ANTHROPIC_API_KEY=DUMMY_KEY
+   ```
+
+2. **Run** the launcher from PowerShell:
+   ```powershell
+   .\windows_scripts\Start-Claude.ps1
+   ```
+
+The script loads environment variables from `.env` (current directory or script directory) and then launches `claude` with any arguments you pass through. You can also place `Start-Claude.ps1` and `.env` anywhere in your `PATH` for convenience.
+
+## LiteLLM `output_config` Patch
+
+When routing Claude Code requests through LiteLLM to **non-Anthropic providers** (Nvidia NIM, Bedrock, etc.), LiteLLM's Anthropic pass-through adapter leaks the `output_config` parameter to the downstream provider, causing errors like:
+
+```
+Unsupported parameter(s): `output_config`
+```
+
+LiteLLM's `drop_params: true` setting does **not** catch this parameter because it flows through a lower layer. The fix requires patching three files in the LiteLLM installation to strip `output_config` before it reaches the provider.
+
+### Applying the Patch
+
+An idempotent bash script is provided at `scripts/patch-litellm-output-config.sh`:
+
+```bash
+chmod +x scripts/patch-litellm-output-config.sh
+./scripts/patch-litellm-output-config.sh
+sudo systemctl restart litellm
+```
+
+The script auto-locates the LiteLLM install via Python and is safe to re-run. For Docker deployments, either call the script from your entrypoint or bake the patches into your `Dockerfile` — see [litellm-output-config-patch.md](litellm-output-config-patch.md) for the full Dockerfile `RUN` lines and manual patching steps.
+
+- Confirmed on: **LiteLLM 1.83.14**
+- Upstream issue: [BerriAI/litellm#22797](https://github.com/BerriAI/litellm/issues/22797)
+
 ## Documentation
 
 - **[PORTAINER.md](PORTAINER.md)** - Complete Portainer deployment guide ⭐ **Recommended**
 - **[QUICKSTART.md](QUICKSTART.md)** - Fast docker-compose deployment
 - **[CLIENT_SETUP.md](CLIENT_SETUP.md)** - Configure Claude Code clients
+- **[litellm-output-config-patch.md](litellm-output-config-patch.md)** - Patch for `output_config` leak to non-Anthropic providers
 - **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Common issues and solutions
 
 ## Configuration
