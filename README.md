@@ -1,6 +1,6 @@
 # Claude LiteLLM Proxy
 
-A Docker container running LiteLLM proxy that translates Anthropic API calls to Google's Gemini API. Point Claude Code CLI at this proxy to use free Gemini 2.5 Flash instead of paid Claude API credits. Deploy once via Portainer or Docker Compose, then connect multiple Claude Code clients from any machine on your network. All Claude model requests (Opus, Sonnet, Haiku) are automatically mapped to Gemini 2.5 Flash with support for SSH access, auto-start on boot, and simple environment-based configuration.
+A Docker container running LiteLLM proxy that translates Anthropic API calls to NVIDIA NIM API. Point Claude Code CLI at this proxy to use free NVIDIA NIM models instead of paid Claude API credits. Deploy once via Portainer or Docker Compose, then connect multiple Claude Code clients from any machine on your network. All Claude model requests (Opus, Sonnet, Haiku) are automatically mapped to NVIDIA NIM models with support for SSH access, auto-start on boot, and simple environment-based configuration.
 
 ## Example Deployment
 
@@ -12,7 +12,7 @@ One proxy server can serve multiple Claude Code clients across different platfor
                            │                                 │
                            │  ┌───────────────────────────┐  │
     ┌──────────────────────┼─►│  LiteLLM Proxy Container  │  │
-    │                      │  │  (192.168.1.100:4000)     │──┼──► Google Gemini API
+    │                      │  │  (192.168.1.100:4000)     │──┼──► NVIDIA NIM API
     │                      │  │                           │  │    (Free Tier)
     │                      │  │  • Deployed via GitHub    │  │
     │                      │  │  • Auto-start on boot     │  │
@@ -43,11 +43,14 @@ One proxy server can serve multiple Claude Code clients across different platfor
        └────────────────────────────────────────┘
 ```
 
-**Benefits:**
-- ✅ Single Google API key shared across all devices
-- ✅ Consistent model access from any machine
-- ✅ Easy to manage (update config once, affects all clients)
-- ✅ No API keys stored on client machines
+### Before you start 
+- Get an NVIDIA NIM API Key
+- Go to build.nvidia.com and create a free NVIDIA account
+- Complete  verification via SMS or email (some regions may have trouble receiving the code — try a different number if needed)
+- Navigate to any model page and click “Get API Key” (or go to the API Keys section)
+- Click “Create API Key” and copy it — it’s only shown once
+The key format looks like nvapi-...
+
 
 ## Quick Start
 
@@ -71,11 +74,11 @@ One proxy server can serve multiple Claude Code clients across different platfor
    - Compose path: `docker-compose.yml` (or `docker-compose.external-network.yml` for existing networks)
    - Upload your `.env` file
 
-3. **Deploy** and SSH to add Google API key:
+3. **Deploy** and SSH to add NVIDIA NIM API key:
    ```bash
    ssh litellm@192.168.1.100  # Use your CONTAINER_IP
    nano ~/.config/litellm/.env
-   # Add: GOOGLE_API_KEY=your_actual_key
+   # Add: NVIDIA_NIM_API_KEY=your_actual_key
    ```
 
 4. **Restart** in Portainer and you're done! 🎉
@@ -92,7 +95,7 @@ One proxy server can serve multiple Claude Code clients across different platfor
 
 - Docker and Docker Compose installed
 - A network with static IP capability (or use bridge networking)
-- Google API key from https://aistudio.google.com/app/apikey (free)
+- NVIDIA NIM API key from https://build.nvidia.com/nim (free)
 
 #### 1. Clone and Configure
 
@@ -111,7 +114,7 @@ nano .env  # Update network settings for your environment
 docker-compose up -d
 ```
 
-### 3. Configure Google API Key
+### 3. Configure NVIDIA NIM API Key
 
 SSH into the container:
 ```bash
@@ -122,7 +125,7 @@ ssh litellm@YOUR_CONTAINER_IP
 Edit the API key:
 ```bash
 nano ~/.config/litellm/.env
-# Add your Google API key
+# Add your NVIDIA NIM API key
 ```
 
 Restart the container:
@@ -244,29 +247,29 @@ Or set `USER_PASSWORD` in `.env` before deploying.
 
 ## Available Models
 
-The proxy maps these Claude models to Gemini 2.5 Flash:
-- `claude-opus-4-7` → `gemini-2.5-flash`
-- `claude-sonnet-4-5-20250929` → `gemini-2.5-flash`
-- `claude-haiku-4-5-20251001` → `gemini-2.5-flash`
+The proxy maps these Claude models to NVIDIA NIM models:
+- `claude-opus-4-7` → `nvidia_nim/z-ai/glm-5.1`
+- `claude-sonnet-4-6` → `nvidia_nim/qwen/qwen3-coder-480b-a35b-instruct`
+- `claude-haiku-4-5-20251001` → `nvidia_nim/moonshotai/kimi-k2.6`
 
-You can also request `gemini-2.5-flash` directly.
+You can also request `gemini-2.5-flash` directly (requires GOOGLE_API_KEY).
 
 ## Limitations
 
-- **Free tier only**: Uses Gemini 2.5 Flash (free). For Gemini Pro, upgrade your Google API plan.
-- **Rate limits**: Subject to Google's free tier rate limits (see https://ai.google.dev/pricing)
-- **Model differences**: Gemini 2.5 Flash is not identical to Claude models
+- **Free tier only**: Uses NVIDIA NIM free tier models. For higher limits, check NVIDIA NIM pricing.
+- **Rate limits**: Subject to NVIDIA NIM free tier rate limits (see https://build.nvidia.com/nim)
+- **Model differences**: NVIDIA NIM models are not identical to Claude models
 
 ## How It Works
 
 ```
-Claude Code CLI → LiteLLM Proxy → Google Gemini API
-                  (translates Anthropic API → Gemini API)
+Claude Code CLI → LiteLLM Proxy → NVIDIA NIM API
+                  (translates Anthropic API → NVIDIA NIM API)
 ```
 
 LiteLLM acts as a proxy that:
 1. Receives requests in Anthropic's API format
-2. Translates them to Google's Gemini API format
+2. Translates them to NVIDIA NIM API format
 3. Sends responses back in Anthropic's format
 
 ## Contributing
@@ -280,7 +283,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 ## Credits
 
 - [LiteLLM](https://github.com/BerriAI/litellm) - The proxy powering this project
-- [Google Gemini](https://ai.google.dev/) - Free AI API
+- [NVIDIA NIM](https://build.nvidia.com/nim) - Free AI API
 - [Anthropic Claude](https://claude.ai/) - Claude Code CLI
 
 ## Support

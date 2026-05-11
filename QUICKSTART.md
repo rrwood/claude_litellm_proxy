@@ -2,9 +2,9 @@
 
 Deploy the Claude LiteLLM proxy in 5 minutes.
 
-## Step 1: Get Your Google API Key
+## Step 1: Get Your NVIDIA NIM API Key
 
-1. Go to https://aistudio.google.com/app/apikey
+1. Go to https://build.nvidia.com/nim
 2. Click **"Create API key"**
 3. Copy the key (starts with `AIza...`)
 
@@ -44,19 +44,19 @@ ssh litellm@YOUR_CONTAINER_IP
 # Password: whatever you set in USER_PASSWORD (default: changeme123)
 ```
 
-Add your Google API key:
+Add your NVIDIA NIM API key:
 ```bash
 nano ~/.config/litellm/.env
 ```
 
 Change this line:
 ```
-GOOGLE_API_KEY=your_google_api_key_here
+NVIDIA_NIM_API_KEY=your_nvidia_nim_api_key_here
 ```
 
 To your actual key:
 ```
-GOOGLE_API_KEY=AIzaSy...your_real_key
+NVIDIA_NIM_API_KEY=nvapi-...your_real_key
 ```
 
 Save and exit, then restart:
@@ -122,11 +122,11 @@ curl http://YOUR_CONTAINER_IP:4000/health
 **API key errors:**
 - Make sure you edited `~/.config/litellm/.env` **inside the container**
 - Restart the container after changing the API key
-- Check the key is valid at https://aistudio.google.com/app/apikey
+- Check the key is valid at https://build.nvidia.com/nim
 
 **"Quota exceeded" errors:**
-- You're trying to use Gemini Pro (not free)
-- Config should map to `gemini-2.5-flash` (free tier)
+- You're trying to use a paid NIM model (not free)
+- Config should map to free tier models
 
 ## Next Steps
 
@@ -153,4 +153,4 @@ Then follow steps 3-5 above.
 3. **Firewall** - Only allow trusted IPs to port 4000
 4. **SSH keys** - Set up key-based authentication (disable password auth)
 
-Enjoy free Claude Code with Gemini! 🚀
+Enjoy free Claude Code with NVIDIA NIM! 🚀

@@ -1,6 +1,6 @@
 # Client Setup Guide
 
-Configure Claude Code CLI to use your LiteLLM proxy for free Gemini access.
+Configure Claude Code CLI to use your LiteLLM proxy for free NVIDIA NIM access.
 
 ## Prerequisites
 
@@ -79,9 +79,9 @@ claude
 
 Then ask: **"What model are you?"**
 
-The response will say "Claude" (LiteLLM translates the identity), but you can verify it's Gemini by asking:
-- "What is your knowledge cutoff date?" (Gemini: 2024+)
-- "Who created you?" (Gemini: Google/DeepMind)
+The response will say "Claude" (LiteLLM translates the identity), but you can verify it's an NVIDIA NIM model by asking:
+- "What is your knowledge cutoff date?" (varies by model)
+- "Who created you?" (varies by model, e.g. Alibaba, Moonshot, Qwen)
 
 ## Using Different Proxy IPs
 
@@ -151,9 +151,9 @@ If using firewall, allow port 4000 on the proxy container.
 
 ## Benefits
 
-✅ **Free** - Use Google's generous Gemini free tier  
+✅ **Free** - Use NVIDIA NIM's generous free tier  
 ✅ **Centralized** - One API key, multiple machines  
-✅ **Fast** - Gemini 2.5 Flash is very fast  
+✅ **Fast** - NVIDIA NIM models are very fast  
 ✅ **Transparent** - Claude Code works exactly the same  
 
 ## Next Steps
