@@ -5,8 +5,9 @@ ARG USERNAME=litellm
 ARG USER_PASSWORD=changeme123
 ARG CONTAINER_HOSTNAME=litellm-proxy
 
-# Make USERNAME available at runtime
+# Make USERNAME and USER_PASSWORD available at runtime
 ENV USERNAME=${USERNAME}
+ENV USER_PASSWORD=${USER_PASSWORD}
 
 # Install system packages
 RUN apk update && apk add --no-cache \
@@ -20,9 +21,8 @@ RUN apk update && apk add --no-cache \
     shadow \
     tzdata
 
-# Create user
+# Create user (password will be set at runtime in entrypoint.sh)
 RUN useradd -m -s /bin/bash ${USERNAME} && \
-    echo "${USERNAME}:${USER_PASSWORD}" | chpasswd && \
     echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Set hostname (done late to ensure no conflicts)
@@ -45,7 +45,11 @@ RUN pip3 install --no-cache-dir --break-system-packages \
     pynacl websockets boto3 azure-identity azure-storage-blob \
     mcp litellm-proxy-extras litellm-enterprise \
     restrictedpython rich polars soundfile rq jsonschema \
-    importlib-metadata fastuuid
+    importlib-metadata fastuuid \
+    prisma
+
+# Generate Prisma client for database support (UI)
+RUN prisma generate || true
 
 # Switch to user
 USER ${USERNAME}

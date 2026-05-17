@@ -208,6 +208,25 @@ The proxy maps these Claude models to Gemini 2.5 Flash:
 
 You can also request `gemini-2.5-flash` directly.
 
+## Admin UI
+
+The proxy includes a built-in web UI for managing models, viewing logs, and monitoring usage.
+
+**Access:** `http://YOUR_CONTAINER_IP:4000/ui`
+
+**Default credentials:**
+- Username: `admin`
+- Password: `changeme123`
+
+**Features:**
+- 🔑 Manage API keys and teams
+- 📊 Monitor usage and spending
+- 🎯 Add/modify model mappings
+- 📝 View request logs
+- ⚙️ Configure settings
+
+**Change credentials:** Edit `UI_USERNAME` and `UI_PASSWORD` in `~/.config/litellm/.env` (via SSH)
+
 ## Limitations
 
 - **Free tier only**: Uses Gemini 2.5 Flash (free). For Gemini Pro, upgrade your Google API plan.

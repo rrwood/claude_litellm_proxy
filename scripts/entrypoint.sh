@@ -3,7 +3,11 @@ set -e
 
 # Get the actual username from build args (defaults to litellm)
 USERNAME=${USERNAME:-litellm}
+USER_PASSWORD=${USER_PASSWORD:-changeme123}
 USER_HOME="/home/${USERNAME}"
+
+# Set user password (allows runtime password changes via env var)
+echo "${USERNAME}:${USER_PASSWORD}" | chpasswd
 
 # Start SSH service
 /usr/sbin/sshd
@@ -20,6 +24,10 @@ if [ ! -f "$USER_HOME/.config/litellm/.env" ]; then
     echo ""
 fi
 
-# Start LiteLLM proxy as the user
+# Start LiteLLM proxy in the background as the user
 echo "Starting LiteLLM proxy on port 4000..."
-exec su - ${USERNAME} -c "$USER_HOME/.config/litellm/start-litellm.sh"
+su - ${USERNAME} -c "$USER_HOME/.config/litellm/start-litellm.sh" &
+
+# Keep container running (SSH accessible even if LiteLLM crashes)
+echo "Container ready. SSH: port 22, LiteLLM: port 4000"
+tail -f /dev/null
