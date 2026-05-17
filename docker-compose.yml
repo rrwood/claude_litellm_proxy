@@ -2,7 +2,7 @@ services:
   litellm-proxy:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.ui
       args:
         USERNAME: ${USERNAME:-litellm}
         USER_PASSWORD: ${USER_PASSWORD:-changeme123}
@@ -16,6 +16,8 @@ services:
     environment:
       - TZ=${TIMEZONE:-UTC}
       - BUILD_HOSTNAME=${CONTAINER_HOSTNAME:-litellm-proxy}
+      - USERNAME=${USERNAME:-litellm}
+      - USER_PASSWORD=${USER_PASSWORD:-changeme123}
 
 networks:
   macvlan-for-direct-access:

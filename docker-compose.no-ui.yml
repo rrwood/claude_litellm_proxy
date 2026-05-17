@@ -2,7 +2,7 @@ services:
   litellm-proxy:
     build:
       context: .
-      dockerfile: Dockerfile.ui
+      dockerfile: Dockerfile
       args:
         USERNAME: ${USERNAME:-litellm}
         USER_PASSWORD: ${USER_PASSWORD:-changeme123}

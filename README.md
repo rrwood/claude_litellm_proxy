@@ -223,7 +223,7 @@ The default `docker-compose.yml` **auto-creates** a macvlan network for direct n
 
 If you already have a `macvlan-for-direct-access` network:
 
-**Portainer:** Use compose path `docker-compose.external-network.yml`
+**Portainer:** Use compose path `docker-compose.external-network.yml` (includes UI)
 
 **Docker Compose:**
 ```bash
@@ -254,19 +254,9 @@ The proxy maps these Claude models to NVIDIA NIM models:
 
 You can also request `gemini-2.5-flash` directly (requires GOOGLE_API_KEY).
 
-## Admin UI (Optional)
+## Admin UI (Included by Default)
 
-The proxy includes an optional built-in web UI for managing models, viewing logs, and monitoring usage.
-
-### Enabling the Admin UI
-
-**Use the UI-enabled compose file in Portainer:**
-- Compose path: `docker-compose.ui.yml` instead of `docker-compose.yml`
-
-**Or with Docker Compose:**
-```bash
-docker-compose -f docker-compose.ui.yml up -d
-```
+The proxy includes a built-in web UI for managing models, viewing logs, and monitoring usage. **The UI is enabled by default** in both `docker-compose.yml` and `docker-compose.external-network.yml`.
 
 **Access:** `http://YOUR_CONTAINER_IP:4000/ui`
 
@@ -283,7 +273,18 @@ docker-compose -f docker-compose.ui.yml up -d
 
 **Change credentials:** Edit `UI_USERNAME` and `UI_PASSWORD` in `~/.config/litellm/.env` (via SSH)
 
-**Note:** The UI version uses the official LiteLLM database image which is larger (~800MB vs ~200MB for the basic proxy). Use `docker-compose.yml` if you don't need the UI.
+### Lightweight Version (No UI)
+
+If you don't need the UI and want a smaller image (~200MB vs ~800MB):
+
+**Portainer:** Use compose path `docker-compose.no-ui.yml`
+
+**Docker Compose:**
+```bash
+docker-compose -f docker-compose.no-ui.yml up -d
+```
+
+The no-UI version uses Alpine Linux and is significantly smaller but lacks database features.
 
 ## Limitations
 
