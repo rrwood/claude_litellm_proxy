@@ -1,25 +1,28 @@
 model_list:
-  # Map all Claude models to Gemini 2.5 Flash (free tier)
+  - model_name: claude-sonnet-4-6
+    litellm_params:
+      model: nvidia_nim/qwen/qwen3-coder-480b-a35b-instruct
+      api_key: os.environ/NVIDIA_NIM_API_KEY
+      drop_params: true
+
   - model_name: claude-opus-4-7
     litellm_params:
-      model: gemini/gemini-2.5-flash
-      api_key: os.environ/GOOGLE_API_KEY
-
-  - model_name: claude-sonnet-4-5-20250929
-    litellm_params:
-      model: gemini/gemini-2.5-flash
-      api_key: os.environ/GOOGLE_API_KEY
+      model: nvidia_nim/z-ai/glm-5.1
+      api_key: os.environ/NVIDIA_NIM_API_KEY
+      drop_params: true
 
   - model_name: claude-haiku-4-5-20251001
     litellm_params:
-      model: gemini/gemini-2.5-flash
-      api_key: os.environ/GOOGLE_API_KEY
+      model: nvidia_nim/moonshotai/kimi-k2.6
+      api_key: os.environ/NVIDIA_NIM_API_KEY
+      drop_params: true
 
-  # Direct Gemini access
+# Direct Gemini access
   - model_name: gemini-2.5-flash
     litellm_params:
       model: gemini/gemini-2.5-flash
       api_key: os.environ/GOOGLE_API_KEY
+      drop_params: true
 
 litellm_settings:
   drop_params: true

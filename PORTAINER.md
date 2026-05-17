@@ -8,7 +8,7 @@ Deploy this proxy in minutes using Portainer's stack feature with GitHub reposit
 
 - Portainer installed and running
 - Access to your Docker host's network configuration
-- Google API key from https://aistudio.google.com/app/apikey
+- NVIDIA NIM API key from https://build.nvidia.com/nim
 
 ## Quick Deploy (Recommended)
 
@@ -69,7 +69,7 @@ TIMEZONE=America/New_York                 # Your timezone
    - Click **"Deploy the stack"**
    - Wait for deployment to complete
 
-### Step 3: Configure Google API Key
+### Step 3: Configure NVIDIA NIM API Key
 
 Once deployed, SSH into the container:
 
@@ -78,7 +78,7 @@ ssh litellm@YOUR_CONTAINER_IP
 # Use the password you set in USER_PASSWORD
 ```
 
-Add your Google API key:
+Add your NVIDIA NIM API key:
 
 ```bash
 nano ~/.config/litellm/.env
@@ -86,10 +86,10 @@ nano ~/.config/litellm/.env
 
 Change this line:
 ```env
-GOOGLE_API_KEY=your_google_api_key_here
+NVIDIA_NIM_API_KEY=your_nvidia_nim_api_key_here
 ```
 
-To your actual key from https://aistudio.google.com/app/apikey
+To your actual key from https://build.nvidia.com/nim
 
 Save and exit (Ctrl+X, Y, Enter).
 
@@ -116,7 +116,7 @@ LiteLLM: Proxy initialized with Config, Set models:
     claude-opus-4-7
     claude-haiku-4-5-20251001
     claude-sonnet-4-5-20250929
-    gemini-2.5-flash
+    nvidia_nim models
 INFO:     Uvicorn running on http://0.0.0.0:4000 (Press CTRL+C to quit)
 ```
 
@@ -230,12 +230,12 @@ services:
 2. Delete the stack (keeps volumes)
 3. Recreate following Step 2 above with your saved `.env` file
 
-**Note:** Your Google API key in `~/.config/litellm/.env` (inside the container) will be lost. Back it up first:
+**Note:** Your NVIDIA NIM API key in `~/.config/litellm/.env` (inside the container) will be lost. Back it up first:
 
 ```bash
 ssh litellm@YOUR_CONTAINER_IP
 cat ~/.config/litellm/.env
-# Copy the GOOGLE_API_KEY value
+# Copy the NVIDIA_NIM_API_KEY value
 ```
 
 ## Troubleshooting
@@ -275,7 +275,7 @@ ps aux | grep litellm
 
 **Check for errors:**
 ```bash
-cat ~/.config/litellm/.env    # Verify Google API key is set
+cat ~/.config/litellm/.env    # Verify NVIDIA NIM API key is set
 ```
 
 **Manually start:**
@@ -306,8 +306,8 @@ cat ~/.config/litellm/.env    # Verify Google API key is set
 You exceeded your current quota, please check your plan and billing details
 ```
 
-- You're using a paid Gemini model (e.g., `gemini-2.5-pro`)
-- The config should only use `gemini-2.5-flash` (free tier)
+- You're using a paid NVIDIA NIM model (e.g., `a paid NIM model`)
+- The config should use free-tier NVIDIA NIM models
 - Check `config/litellm_config.yaml` in the repository
 
 ## Security Recommendations
@@ -352,7 +352,7 @@ After successful deployment:
 1. **Configure clients:** See [CLIENT_SETUP.md](CLIENT_SETUP.md)
 2. **Test the proxy:** See [QUICKSTART.md](QUICKSTART.md) Step 5
 3. **Monitor usage:** Check logs in Portainer
-4. **Backup API key:** Save your Google API key securely
+4. **Backup API key:** Save your NVIDIA NIM API key securely
 
 ## Benefits of Portainer Deployment
 
