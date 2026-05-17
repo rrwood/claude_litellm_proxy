@@ -35,9 +35,9 @@ RUN mkdir -p /run/sshd && \
     sed -i 's/#PubkeyAuthentication.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config && \
     ssh-keygen -A
 
-# Install LiteLLM and dependencies
+# Install LiteLLM and dependencies (includes Prisma)
 RUN pip3 install --no-cache-dir --break-system-packages \
-    litellm \
+    'litellm[proxy]' \
     aiohttp fastapi uvicorn pydantic jinja2 click \
     python-dotenv httpx openai tiktoken tokenizers \
     gunicorn uvloop backoff pyyaml orjson apscheduler \
@@ -45,11 +45,10 @@ RUN pip3 install --no-cache-dir --break-system-packages \
     pynacl websockets boto3 azure-identity azure-storage-blob \
     mcp litellm-proxy-extras litellm-enterprise \
     restrictedpython rich polars soundfile rq jsonschema \
-    importlib-metadata fastuuid \
-    prisma
+    importlib-metadata fastuuid
 
-# Generate Prisma client for database support (UI)
-RUN prisma generate || true
+# Make Python site-packages writable for Prisma client generation
+RUN chmod -R 777 /usr/lib/python3.12/site-packages/prisma || true
 
 # Switch to user
 USER ${USERNAME}
