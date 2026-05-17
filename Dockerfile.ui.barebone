@@ -1,0 +1,16 @@
+# Use the base image completely unmodified - no RUN commands at all
+FROM --platform=linux/amd64 docker.litellm.ai/berriai/litellm-database:main-stable
+
+# Only metadata and runtime config - no RUN commands that execute in the container
+ARG USERNAME=litellm
+ARG USER_PASSWORD=changeme123
+ARG CONTAINER_HOSTNAME=litellm-proxy
+
+ENV USERNAME=${USERNAME}
+ENV USER_PASSWORD=${USER_PASSWORD}
+ENV CONTAINER_HOSTNAME=${CONTAINER_HOSTNAME}
+
+# Just expose the port
+EXPOSE 4000
+
+# Use whatever CMD/ENTRYPOINT the base image has
