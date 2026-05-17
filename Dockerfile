@@ -47,8 +47,11 @@ RUN pip3 install --no-cache-dir --break-system-packages \
     restrictedpython rich polars soundfile rq jsonschema \
     importlib-metadata fastuuid
 
-# Make Python site-packages writable for Prisma client generation
-RUN chmod -R 777 /usr/lib/python3.12/site-packages/prisma || true
+# Generate Prisma client (required for Admin UI)
+# This generates the binaries that LiteLLM needs for database features
+RUN cd /usr/lib/python3.12/site-packages/prisma && \
+    python3 -m prisma generate || \
+    (echo "Prisma generate failed, UI will not be available" && true)
 
 # Switch to user
 USER ${USERNAME}
