@@ -1,0 +1,6 @@
+# Test if base image works at all
+FROM --platform=linux/amd64 docker.litellm.ai/berriai/litellm-database:main-stable
+
+# Don't modify anything - just use the base image as-is
+EXPOSE 4000
+CMD ["litellm", "--config", "/app/config.yaml"]
