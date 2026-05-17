@@ -29,5 +29,5 @@ litellm_settings:
 
 general_settings:
   master_key: DUMMY_KEY
-  # SQLite database for Admin UI support (disabled - requires Prisma)
-  # database_url: "sqlite:////home/litellm/.config/litellm/litellm.db"
+  # SQLite database for Admin UI support
+  database_url: "sqlite:////home/litellm/.config/litellm/litellm.db"

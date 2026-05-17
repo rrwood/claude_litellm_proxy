@@ -1,0 +1,67 @@
+# Start from official LiteLLM database image (has Prisma pre-configured)
+FROM docker.litellm.ai/berriai/litellm-database:main-stable
+
+# Build arguments with defaults
+ARG USERNAME=litellm
+ARG USER_PASSWORD=changeme123
+ARG CONTAINER_HOSTNAME=litellm-proxy
+
+# Make USERNAME and USER_PASSWORD available at runtime
+ENV USERNAME=${USERNAME}
+ENV USER_PASSWORD=${USER_PASSWORD}
+
+# Switch to root to install SSH and configure system
+USER root
+
+# Install SSH and necessary packages
+RUN apt-get update && apt-get install -y \
+    openssh-server \
+    sudo \
+    nano \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create user (password will be set at runtime in entrypoint.sh)
+RUN useradd -m -s /bin/bash ${USERNAME} && \
+    echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+# Set hostname
+RUN echo "${CONTAINER_HOSTNAME}" > /etc/hostname
+
+# Configure SSH
+RUN mkdir -p /run/sshd && \
+    sed -i 's/#PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config && \
+    sed -i 's/#PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config && \
+    sed -i 's/#PubkeyAuthentication.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config && \
+    mkdir -p /var/run/sshd
+
+# Switch to user
+USER ${USERNAME}
+WORKDIR /home/${USERNAME}
+
+# Create LiteLLM configuration directory
+RUN mkdir -p /home/${USERNAME}/.config/litellm
+
+# Copy LiteLLM configuration files
+COPY --chown=${USERNAME}:${USERNAME} config/litellm_config.yaml /home/${USERNAME}/.config/litellm/
+COPY --chown=${USERNAME}:${USERNAME} config/.env.example /home/${USERNAME}/.config/litellm/
+COPY --chown=${USERNAME}:${USERNAME} scripts/start-litellm.sh /home/${USERNAME}/.config/litellm/
+RUN chmod +x /home/${USERNAME}/.config/litellm/start-litellm.sh
+
+# Add PATH for Python local binaries
+RUN echo 'export PATH="$HOME/.local/bin:$PATH"' >> /home/${USERNAME}/.bashrc
+
+# Setup welcome message
+USER root
+COPY scripts/welcome-motd.sh /etc/profile.d/welcome.sh
+RUN chmod +x /etc/profile.d/welcome.sh
+
+# Copy entrypoint script
+COPY scripts/entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Expose ports
+EXPOSE 22 4000
+
+# Set entrypoint
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

@@ -254,9 +254,19 @@ The proxy maps these Claude models to NVIDIA NIM models:
 
 You can also request `gemini-2.5-flash` directly (requires GOOGLE_API_KEY).
 
-## Admin UI
+## Admin UI (Optional)
 
-The proxy includes a built-in web UI for managing models, viewing logs, and monitoring usage.
+The proxy includes an optional built-in web UI for managing models, viewing logs, and monitoring usage.
+
+### Enabling the Admin UI
+
+**Use the UI-enabled compose file in Portainer:**
+- Compose path: `docker-compose.ui.yml` instead of `docker-compose.yml`
+
+**Or with Docker Compose:**
+```bash
+docker-compose -f docker-compose.ui.yml up -d
+```
 
 **Access:** `http://YOUR_CONTAINER_IP:4000/ui`
 
@@ -272,6 +282,8 @@ The proxy includes a built-in web UI for managing models, viewing logs, and moni
 - ⚙️ Configure settings
 
 **Change credentials:** Edit `UI_USERNAME` and `UI_PASSWORD` in `~/.config/litellm/.env` (via SSH)
+
+**Note:** The UI version uses the official LiteLLM database image which is larger (~800MB vs ~200MB for the basic proxy). Use `docker-compose.yml` if you don't need the UI.
 
 ## Limitations
 
