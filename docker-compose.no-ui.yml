@@ -1,8 +1,11 @@
 services:
   litellm-proxy:
+    platform: linux/amd64
     build:
       context: .
       dockerfile: Dockerfile
+      platforms:
+        - linux/amd64
       args:
         USERNAME: ${USERNAME:-litellm}
         USER_PASSWORD: ${USER_PASSWORD:-changeme123}

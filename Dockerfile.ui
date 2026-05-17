@@ -1,10 +1,12 @@
 # Start from official LiteLLM database image (has Prisma pre-configured)
-FROM docker.litellm.ai/berriai/litellm-database:main-stable
+# Explicitly specify platform to avoid architecture issues
+FROM --platform=linux/amd64 docker.litellm.ai/berriai/litellm-database:main-stable
 
 # Build arguments with defaults
 ARG USERNAME=litellm
 ARG USER_PASSWORD=changeme123
 ARG CONTAINER_HOSTNAME=litellm-proxy
+ARG CACHEBUST=1
 
 # Make USERNAME and USER_PASSWORD available at runtime
 ENV USERNAME=${USERNAME}
@@ -13,8 +15,15 @@ ENV USER_PASSWORD=${USER_PASSWORD}
 # Switch to root to install SSH and configure system
 USER root
 
+# Force cache invalidation
+RUN echo "Cache bust: ${CACHEBUST}"
+
 # Install SSH and necessary packages
-RUN apt-get update && apt-get install -y \
+# Update package lists and install with error handling
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     openssh-server \
     sudo \
     nano \
