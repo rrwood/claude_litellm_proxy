@@ -29,5 +29,6 @@ litellm_settings:
 
 general_settings:
   master_key: DUMMY_KEY
-  # SQLite database for Admin UI support
-  database_url: "sqlite:////home/litellm/.config/litellm/litellm.db"
+  # SQLite database for Admin UI support (only for UI-enabled deployments)
+  # Uncomment for docker-compose.external-network.yml (Debian with UI)
+  # database_url: "sqlite:////home/litellm/.config/litellm/litellm.db"
