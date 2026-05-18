@@ -29,6 +29,8 @@ litellm_settings:
 
 general_settings:
   master_key: DUMMY_KEY
+  # Default model when client doesn't specify one
+  default_model: claude-sonnet-4-6
   # SQLite database for Admin UI support (only for UI-enabled deployments)
   # Uncomment for docker-compose.external-network.yml (Debian with UI)
   # database_url: "sqlite:////home/litellm/.config/litellm/litellm.db"
