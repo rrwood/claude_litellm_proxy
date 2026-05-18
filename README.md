@@ -71,7 +71,7 @@ The key format looks like nvapi-...
    - Build method: **Repository**
    - Repository URL: `https://github.com/rrwood/claude_litellm_proxy`
    - Reference: `refs/heads/main`
-   - Compose path: `docker-compose.yml` (or `docker-compose.external-network.yml` for existing networks)
+   - Compose path: `docker-compose.no-ui.external-network.yml` (for existing macvlan networks) or `docker-compose.no-ui.yml` (to auto-create network)
    - Upload your `.env` file
 
 3. **Deploy** and SSH to add NVIDIA NIM API key:
@@ -223,11 +223,11 @@ The default `docker-compose.yml` **auto-creates** a macvlan network for direct n
 
 If you already have a `macvlan-for-direct-access` network:
 
-**Portainer:** Use compose path `docker-compose.external-network.yml` (includes UI)
+**Portainer:** Use compose path `docker-compose.no-ui.external-network.yml`
 
 **Docker Compose:**
 ```bash
-docker-compose -f docker-compose.external-network.yml up -d
+docker-compose -f docker-compose.no-ui.external-network.yml up -d
 ```
 
 ### Using Bridge Networking (Alternative)
@@ -254,37 +254,22 @@ The proxy maps these Claude models to NVIDIA NIM models:
 
 You can also request `gemini-2.5-flash` directly (requires GOOGLE_API_KEY).
 
-## Admin UI (Included by Default)
+## Swagger API Documentation
 
-The proxy includes a built-in web UI for managing models, viewing logs, and monitoring usage. **The UI is enabled by default** in both `docker-compose.yml` and `docker-compose.external-network.yml`.
+The proxy includes built-in interactive API documentation via Swagger UI for managing models and testing endpoints.
 
-**Access:** `http://YOUR_CONTAINER_IP:4000/ui`
-
-**Default credentials:**
-- Username: `admin`
-- Password: `changeme123`
+**Access:** `http://YOUR_CONTAINER_IP:4000/`
 
 **Features:**
-- 🔑 Manage API keys and teams
-- 📊 Monitor usage and spending
-- 🎯 Add/modify model mappings
-- 📝 View request logs
-- ⚙️ Configure settings
+- 🔍 Browse all available API endpoints
+- 🧪 Test API calls interactively  
+- 📝 View request/response schemas
+- 🎯 Add/modify model mappings via `/model/new` API
+- 📊 Check model health via `/model/info`
 
-**Change credentials:** Edit `UI_USERNAME` and `UI_PASSWORD` in `~/.config/litellm/.env` (via SSH)
+**Authentication:** Use `DUMMY_KEY` as Bearer token (set in config as `master_key`)
 
-### Lightweight Version (No UI)
-
-If you don't need the UI and want a smaller image (~200MB vs ~800MB):
-
-**Portainer:** Use compose path `docker-compose.no-ui.yml`
-
-**Docker Compose:**
-```bash
-docker-compose -f docker-compose.no-ui.yml up -d
-```
-
-The no-UI version uses Alpine Linux and is significantly smaller but lacks database features.
+**Note:** A full Admin UI with database features is available in LiteLLM's official Docker images, but requires Debian-based systems. See the task list for future UI enhancement options.
 
 ## Limitations
 
