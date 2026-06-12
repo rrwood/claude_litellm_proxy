@@ -14,7 +14,11 @@
       "Bash(git merge *)",
       "WebFetch(domain:github.com)",
       "Bash(git restore *)",
-      "Bash(chmod +x *)"
+      "Bash(chmod +x *)",
+      "Bash(curl -s http://192.168.111.50:4000/)",
+      "Bash(ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no litellm@192.168.111.50 'cat ~/.config/litellm/.env')",
+      "Bash(curl *)",
+      "Bash(git rm *)"
     ]
   }
 }
