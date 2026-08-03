@@ -1,19 +1,19 @@
 model_list:
   - model_name: claude-sonnet-4-6
     litellm_params:
-      model: qwen/qwen3-coder-480b-a35b-instruct
+      model: nvidia_nim/deepseek-ai/deepseek-v4-pro
       api_key: os.environ/NVIDIA_NIM_API_KEY
       drop_params: true
 
   - model_name: claude-opus-4-7
     litellm_params:
-      model: minimaxai/minimax-m2.7
+      model: nvidia_nim/nvidia/nemotron-3-ultra-550b-a55b
       api_key: os.environ/NVIDIA_NIM_API_KEY
       drop_params: true
 
   - model_name: claude-haiku-4-5-20251001
     litellm_params:
-      model: abacusai/dracarys-llama-3.1-70b-instruct
+      model: nvidia_nim/meta/llama-3.3-70b-instruct
       api_key: os.environ/NVIDIA_NIM_API_KEY
       drop_params: true
 

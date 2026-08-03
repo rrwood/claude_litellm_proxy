@@ -247,9 +247,9 @@ Or set `USER_PASSWORD` in `.env` before deploying.
 ## Available Models
 
 The proxy maps these Claude models to NVIDIA NIM models:
-- `claude-sonnet-4-6` → `qwen/qwen3-coder-480b-a35b-instruct` (default)
-- `claude-opus-4-7` → `minimaxai/minimax-m2.7`
-- `claude-haiku-4-5-20251001` → `abacusai/dracarys-llama-3.1-70b-instruct`
+- `claude-sonnet-4-6` → `deepseek-ai/deepseek-v4-pro` (default)
+- `claude-opus-4-7` → `nvidia/nemotron-3-ultra-550b-a55b`
+- `claude-haiku-4-5-20251001` → `meta/llama-3.3-70b-instruct`
 
 You can also request `gemini-2.5-flash` directly (requires GOOGLE_API_KEY).
 
