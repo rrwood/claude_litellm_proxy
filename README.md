@@ -54,7 +54,7 @@ The key format looks like nvapi-...
 
 ## Quick Start
 
-### 🚀 Portainer Deployment (Recommended)
+### Portainer Deployment (Recommended)
 
 **The easiest way - no command line needed!**
 
@@ -81,13 +81,13 @@ The key format looks like nvapi-...
    # Add: NVIDIA_NIM_API_KEY=your_actual_key
    ```
 
-4. **Restart** in Portainer and you're done! 🎉
+4. **Restart** in Portainer and you're done!
 
-📖 **Detailed guide:** [PORTAINER.md](PORTAINER.md)
+Detailed guide: [docs/PORTAINER.md](docs/PORTAINER.md)
 
 ---
 
-### 🐳 Docker Compose Deployment (Alternative)
+### Docker Compose Deployment (Alternative)
 
 **For command-line users:**
 
@@ -155,7 +155,7 @@ claude /logout  # Logout of claude.ai first
 claude          # Start using the proxy!
 ```
 
-See [CLIENT_SETUP.md](CLIENT_SETUP.md) for detailed client configuration.
+See [docs/CLIENT_SETUP.md](docs/CLIENT_SETUP.md) for detailed client configuration.
 
 ## Windows Quick Start
 
@@ -194,24 +194,23 @@ chmod +x scripts/patch-litellm-output-config.sh
 sudo systemctl restart litellm
 ```
 
-The script auto-locates the LiteLLM install via Python and is safe to re-run. For Docker deployments, either call the script from your entrypoint or bake the patches into your `Dockerfile` — see [litellm-output-config-patch.md](litellm-output-config-patch.md) for the full Dockerfile `RUN` lines and manual patching steps.
+The script auto-locates the LiteLLM install via Python and is safe to re-run. For Docker deployments, either call the script from your entrypoint or bake the patches into your `Dockerfile` — see [docs/litellm-output-config-patch.md](docs/litellm-output-config-patch.md) for the full Dockerfile `RUN` lines and manual patching steps.
 
 - Confirmed on: **LiteLLM 1.83.14**
 - Upstream issue: [BerriAI/litellm#22797](https://github.com/BerriAI/litellm/issues/22797)
 
 ## Documentation
 
-- **[PORTAINER.md](PORTAINER.md)** - Complete Portainer deployment guide ⭐ **Recommended**
-- **[QUICKSTART.md](QUICKSTART.md)** - Fast docker-compose deployment
-- **[CLIENT_SETUP.md](CLIENT_SETUP.md)** - Configure Claude Code clients
-- **[litellm-output-config-patch.md](litellm-output-config-patch.md)** - Patch for `output_config` leak to non-Anthropic providers
-- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Common issues and solutions
+- **[docs/PORTAINER.md](docs/PORTAINER.md)** - Complete Portainer deployment guide (Recommended)
+- **[docs/QUICKSTART.md](docs/QUICKSTART.md)** - Fast docker-compose deployment
+- **[docs/CLIENT_SETUP.md](docs/CLIENT_SETUP.md)** - Configure Claude Code clients
+- **[docs/litellm-output-config-patch.md](docs/litellm-output-config-patch.md)** - Patch for `output_config` leak to non-Anthropic providers
 
 ## Configuration
 
 ### Network Settings
 
-The default `docker-compose.yml` **auto-creates** a macvlan network for direct network access. Update `.env` with your network settings:
+The default `docker-compose.no-ui.yml` auto-creates a macvlan network for direct network access. Update `.env` with your network settings:
 
 - `CONTAINER_IP` - Static IP for the container
 - `NETWORK_SUBNET` - Your network subnet (e.g., 192.168.111.0/24)
@@ -232,7 +231,7 @@ docker-compose -f docker-compose.no-ui.external-network.yml up -d
 
 ### Using Bridge Networking (Alternative)
 
-If you don't have static IP capability, use bridge networking with port mapping. See [BRIDGE_NETWORKING.md](BRIDGE_NETWORKING.md).
+If you don't have static IP capability, use bridge networking with port mapping. See the bridge networking section in [docs/PORTAINER.md](docs/PORTAINER.md).
 
 ### Security
 
@@ -248,9 +247,9 @@ Or set `USER_PASSWORD` in `.env` before deploying.
 ## Available Models
 
 The proxy maps these Claude models to NVIDIA NIM models:
-- `claude-opus-4-7` → `nvidia_nim/z-ai/glm-5.1`
-- `claude-sonnet-4-6` → `nvidia_nim/qwen/qwen3-coder-480b-a35b-instruct`
-- `claude-haiku-4-5-20251001` → `nvidia_nim/moonshotai/kimi-k2.6`
+- `claude-sonnet-4-6` → `qwen/qwen3-coder-480b-a35b-instruct` (default)
+- `claude-opus-4-7` → `minimaxai/minimax-m2.7`
+- `claude-haiku-4-5-20251001` → `abacusai/dracarys-llama-3.1-70b-instruct`
 
 You can also request `gemini-2.5-flash` directly (requires GOOGLE_API_KEY).
 
@@ -261,18 +260,33 @@ The proxy includes built-in interactive API documentation via Swagger UI for man
 **Access:** `http://YOUR_CONTAINER_IP:4000/`
 
 **Features:**
-- 🔍 Browse all available API endpoints
-- 🧪 Test API calls interactively  
-- 📝 View request/response schemas
-- 🎯 Add/modify model mappings via `/model/new` API
-- 📊 Check model health via `/model/info`
+- Browse all available API endpoints
+- Test API calls interactively
+- View request/response schemas
+- Add/modify model mappings via `/model/new` API
+- Check model health via `/model/info`
 
 **Authentication:** Use `DUMMY_KEY` as Bearer token (set in config as `master_key`)
 
-**Note:** A full Admin UI with database features is available in LiteLLM's official Docker images, but requires Debian-based systems. See the task list for future UI enhancement options.
+**Note:** A full Admin UI with database features is available in LiteLLM's official Docker images, but requires Debian-based systems (see Limitations).
+
+## Changing Model Mappings
+
+To change which models the proxy routes to, edit `config/litellm_config.yaml` in this repo.
+
+**With remote config (recommended):** Set `CONFIG_REPO_URL` in your `.env` to point at the raw GitHub URL for your config file. On each container restart, the entrypoint fetches the latest config automatically. If the fetch fails, the container falls back to the config baked into the image.
+
+```env
+CONFIG_REPO_URL=https://raw.githubusercontent.com/rrwood/claude_litellm_proxy/main/config/litellm_config.yaml
+```
+
+Workflow: edit config in GitHub, commit, restart the container.
+
+**Without remote config:** SSH into the container and edit `~/.config/litellm/litellm_config.yaml` directly, then restart.
 
 ## Limitations
 
+- **Alpine-only**: This project uses Alpine Linux. The official Debian-based LiteLLM database image fails with exit code 132 (SIGILL) on some x86_64 hosts. If you need the Admin UI, you may need a different host or a custom Alpine build.
 - **Free tier only**: Uses NVIDIA NIM free tier models. For higher limits, check NVIDIA NIM pricing.
 - **Rate limits**: Subject to NVIDIA NIM free tier rate limits (see https://build.nvidia.com/nim)
 - **Model differences**: NVIDIA NIM models are not identical to Claude models
@@ -306,6 +320,5 @@ MIT License - see [LICENSE](LICENSE) for details.
 ## Support
 
 For issues and questions:
-- Check [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 - Open an issue on GitHub
 - Visit LiteLLM docs: https://docs.litellm.ai/

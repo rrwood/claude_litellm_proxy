@@ -12,15 +12,28 @@ echo "${USERNAME}:${USER_PASSWORD}" | chpasswd
 # Start SSH service
 /usr/sbin/sshd
 
+# Fetch config from remote URL if CONFIG_REPO_URL is set
+if [ -n "${CONFIG_REPO_URL:-}" ]; then
+    echo "Fetching config from: $CONFIG_REPO_URL"
+    if curl -fsSL "$CONFIG_REPO_URL" -o "$USER_HOME/.config/litellm/litellm_config.yaml.tmp"; then
+        mv "$USER_HOME/.config/litellm/litellm_config.yaml.tmp" "$USER_HOME/.config/litellm/litellm_config.yaml"
+        chown ${USERNAME}:${USERNAME} "$USER_HOME/.config/litellm/litellm_config.yaml"
+        echo "Config updated from remote URL"
+    else
+        rm -f "$USER_HOME/.config/litellm/litellm_config.yaml.tmp"
+        echo "WARN: Config fetch failed, using existing config"
+    fi
+fi
+
 # Check if .env file exists, if not create from example
 if [ ! -f "$USER_HOME/.config/litellm/.env" ]; then
     cp "$USER_HOME/.config/litellm/.env.example" "$USER_HOME/.config/litellm/.env"
     chown ${USERNAME}:${USERNAME} "$USER_HOME/.config/litellm/.env"
     echo "================================================"
-    echo "IMPORTANT: Configure your Google API key"
+    echo "IMPORTANT: Configure your NVIDIA NIM API key"
     echo "================================================"
     echo "Edit: ~/.config/litellm/.env"
-    echo "Get API key: https://aistudio.google.com/app/apikey"
+    echo "Get API key: https://build.nvidia.com/nim"
     echo ""
 fi
 

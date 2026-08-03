@@ -69,7 +69,7 @@ COPY scripts/welcome-motd.sh /etc/profile.d/welcome.sh
 RUN chmod +x /etc/profile.d/welcome.sh
 
 # Copy DEBUG entrypoint script
-COPY scripts/entrypoint-debug.sh /usr/local/bin/entrypoint.sh
+COPY debug/entrypoint-debug.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Expose ports

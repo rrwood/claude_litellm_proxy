@@ -17,6 +17,12 @@ workspace/
 *.swp
 *.swo
 
+# Local/scratch files
+*.local.*
+
+# Claude Code session state
+.claude/
+
 # OS
 .DS_Store
 Thumbs.db

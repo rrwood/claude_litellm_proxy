@@ -5,7 +5,7 @@ Configure Claude Code CLI to use your LiteLLM proxy for free NVIDIA NIM access.
 ## Prerequisites
 
 - Claude Code CLI installed ([Download](https://claude.ai/download))
-- LiteLLM proxy running (see [README.md](README.md))
+- LiteLLM proxy running (see [README.md](../README.md))
 - Proxy IP address (e.g., 192.168.1.100)
 
 ## Important: Logout First
@@ -162,4 +162,4 @@ If using firewall, allow port 4000 on the proxy container.
 - Set up SSH keys for secure access
 - Configure startup scripts for your workflow
 
-See [README.md](README.md) for more information.
+See [README.md](../README.md) for more information.

@@ -131,8 +131,7 @@ curl http://YOUR_CONTAINER_IP:4000/health
 ## Next Steps
 
 - [CLIENT_SETUP.md](CLIENT_SETUP.md) - Configure more clients
-- [README.md](README.md) - Full documentation
-- [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - Common issues
+- [README.md](../README.md) - Full documentation
 
 ## Using Portainer
 

@@ -56,7 +56,7 @@ TIMEZONE=America/New_York                 # Your timezone
 3. **Repository Settings**
    - **Repository URL:** `https://github.com/rrwood/claude_litellm_proxy`
    - **Repository reference:** `refs/heads/main`
-   - **Compose path:** `docker-compose.yml` (or `docker-compose.external-network.yml` if using existing network)
+   - **Compose path:** `docker-compose.no-ui.yml` (or `docker-compose.no-ui.external-network.yml` if using existing network)
    - **Authentication:** Not required (public repository)
 
 4. **Upload Environment File**
@@ -170,7 +170,7 @@ ip route | grep default         # Find your gateway
 If you already have a `macvlan-for-direct-access` network created on your Docker host, use the alternative compose file:
 
 1. **In Portainer stack configuration**, change:
-   - **Compose path:** `docker-compose.external-network.yml`
+   - **Compose path:** `docker-compose.no-ui.external-network.yml`
 
 2. **In your .env file**, you only need:
    ```env
@@ -366,8 +366,7 @@ After successful deployment:
 ## Next Steps
 
 - [CLIENT_SETUP.md](CLIENT_SETUP.md) - Configure Claude Code clients
-- [README.md](README.md) - Full documentation
-- [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - Additional help
+- [README.md](../README.md) - Full documentation
 
 ---
 
