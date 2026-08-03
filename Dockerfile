@@ -45,7 +45,7 @@ RUN pip install --no-cache-dir \
     gunicorn uvloop backoff pyyaml orjson apscheduler \
     fastapi-sso pyjwt python-multipart cryptography \
     pynacl websockets jsonschema importlib-metadata \
-    redis
+    redis boto3 rich
 
 # Switch to user
 USER ${USERNAME}
