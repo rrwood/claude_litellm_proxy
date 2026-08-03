@@ -46,7 +46,8 @@ RUN pip3 install --no-cache-dir --break-system-packages \
     python-dotenv httpx openai tiktoken tokenizers \
     gunicorn uvloop backoff pyyaml orjson apscheduler \
     fastapi-sso pyjwt python-multipart cryptography \
-    pynacl websockets jsonschema importlib-metadata
+    pynacl websockets jsonschema importlib-metadata \
+    redis
 
 # Switch to user
 USER ${USERNAME}
