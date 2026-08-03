@@ -19,7 +19,11 @@ RUN apk update && apk add --no-cache \
     openssh \
     sudo \
     shadow \
-    tzdata
+    tzdata \
+    gcc \
+    musl-dev \
+    python3-dev \
+    libffi-dev
 
 # Create user (password will be set at runtime in entrypoint.sh)
 RUN useradd -m -s /bin/bash ${USERNAME} && \
