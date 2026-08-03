@@ -37,15 +37,8 @@ RUN mkdir -p /run/sshd && \
 
 # Install LiteLLM and dependencies (lightweight - no database/UI support)
 RUN pip3 install --no-cache-dir --break-system-packages \
-    litellm \
-    aiohttp fastapi uvicorn pydantic jinja2 click \
-    python-dotenv httpx openai tiktoken tokenizers \
-    gunicorn uvloop backoff pyyaml orjson apscheduler \
-    fastapi-sso pyjwt python-multipart cryptography \
-    pynacl websockets boto3 azure-identity azure-storage-blob \
-    mcp litellm-proxy-extras litellm-enterprise \
-    restrictedpython rich polars soundfile rq jsonschema \
-    importlib-metadata fastuuid
+    'litellm[proxy]' \
+    python-dotenv pyyaml
 
 # Switch to user
 USER ${USERNAME}
@@ -68,7 +61,7 @@ USER root
 COPY scripts/welcome-motd.sh /etc/profile.d/welcome.sh
 RUN chmod +x /etc/profile.d/welcome.sh
 
-# Copy entrypoint script
+# Copy entrypoint script (supports CONFIG_REPO_URL for remote config fetch)
 COPY scripts/entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
