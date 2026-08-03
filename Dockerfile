@@ -41,8 +41,12 @@ RUN mkdir -p /run/sshd && \
 
 # Install LiteLLM and dependencies (lightweight - no database/UI support)
 RUN pip3 install --no-cache-dir --break-system-packages \
-    'litellm[proxy]' \
-    python-dotenv pyyaml
+    litellm \
+    aiohttp fastapi uvicorn pydantic jinja2 click \
+    python-dotenv httpx openai tiktoken tokenizers \
+    gunicorn uvloop backoff pyyaml orjson apscheduler \
+    fastapi-sso pyjwt python-multipart cryptography \
+    pynacl websockets jsonschema importlib-metadata
 
 # Switch to user
 USER ${USERNAME}
