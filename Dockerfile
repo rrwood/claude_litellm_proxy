@@ -42,7 +42,7 @@ RUN pip install --no-cache-dir \
     gunicorn uvloop backoff orjson apscheduler \
     fastapi fastapi-sso pyjwt python-multipart cryptography \
     pynacl websockets jsonschema \
-    redis boto3 rich
+    pydantic-settings redis boto3 rich
 
 # Switch to user
 USER ${USERNAME}
