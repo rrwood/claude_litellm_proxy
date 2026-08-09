@@ -36,8 +36,9 @@ RUN mkdir -p /run/sshd && \
     sed -i 's/#PubkeyAuthentication.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config && \
     ssh-keygen -A
 
-# Install LiteLLM first (pulls correct FastAPI version), then extras
+# Install LiteLLM first, then FastAPI pinned to compatible range, then extras
 RUN pip install --no-cache-dir litellm && \
+    pip install --no-cache-dir 'fastapi>=0.136.3,<0.141' && \
     pip install --no-cache-dir \
     gunicorn uvloop backoff orjson apscheduler \
     fastapi-sso pyjwt python-multipart cryptography \
