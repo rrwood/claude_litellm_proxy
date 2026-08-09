@@ -36,8 +36,15 @@ RUN mkdir -p /run/sshd && \
     sed -i 's/#PubkeyAuthentication.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config && \
     ssh-keygen -A
 
-# Install LiteLLM with all proxy dependencies
-RUN pip install --no-cache-dir 'litellm[proxy]'
+# Install LiteLLM and proxy dependencies explicitly
+RUN pip install --no-cache-dir \
+    litellm \
+    aiohttp fastapi uvicorn pydantic pydantic-settings jinja2 click \
+    python-dotenv httpx openai tiktoken tokenizers \
+    gunicorn uvloop backoff pyyaml orjson apscheduler \
+    fastapi-sso pyjwt python-multipart cryptography \
+    pynacl websockets jsonschema importlib-metadata \
+    redis boto3 rich expression
 
 # Switch to user
 USER ${USERNAME}
