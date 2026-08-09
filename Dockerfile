@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM python:3.12-alpine
 
 # Build arguments with defaults
 ARG USERNAME=litellm
@@ -9,17 +9,18 @@ ARG CONTAINER_HOSTNAME=litellm-proxy
 ENV USERNAME=${USERNAME}
 ENV USER_PASSWORD=${USER_PASSWORD}
 
-# Install system packages
+# Install system packages and build dependencies
 RUN apk update && apk add --no-cache \
     bash \
     curl \
     nano \
-    python3 \
-    py3-pip \
     openssh \
     sudo \
     shadow \
-    tzdata
+    tzdata \
+    gcc \
+    musl-dev \
+    libffi-dev
 
 # Create user (password will be set at runtime in entrypoint.sh)
 RUN useradd -m -s /bin/bash ${USERNAME} && \
@@ -36,7 +37,7 @@ RUN mkdir -p /run/sshd && \
     ssh-keygen -A
 
 # Install LiteLLM with all proxy dependencies
-RUN pip3 install --no-cache-dir --break-system-packages 'litellm[proxy]'
+RUN pip install --no-cache-dir 'litellm[proxy]'
 
 # Switch to user
 USER ${USERNAME}
