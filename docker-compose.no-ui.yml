@@ -21,7 +21,6 @@ services:
       - BUILD_HOSTNAME=${CONTAINER_HOSTNAME:-litellm-proxy}
       - USERNAME=${USERNAME:-litellm}
       - USER_PASSWORD=${USER_PASSWORD:-changeme123}
-      - CONFIG_REPO_URL=${CONFIG_REPO_URL:-}
 
 networks:
   macvlan-for-direct-access:

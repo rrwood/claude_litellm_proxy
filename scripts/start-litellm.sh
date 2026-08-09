@@ -1,5 +1,4 @@
 #!/bin/bash
-export PATH="/usr/local/bin:$HOME/.local/bin:$PATH"
 CONFIG_DIR="$HOME/.config/litellm"
 
 # Auto-export all environment variables

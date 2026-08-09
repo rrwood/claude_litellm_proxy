@@ -1,4 +1,4 @@
-FROM python:3.12-alpine
+FROM alpine:latest
 
 # Build arguments with defaults
 ARG USERNAME=litellm
@@ -9,19 +9,17 @@ ARG CONTAINER_HOSTNAME=litellm-proxy
 ENV USERNAME=${USERNAME}
 ENV USER_PASSWORD=${USER_PASSWORD}
 
-# Install system packages and build dependencies
+# Install system packages
 RUN apk update && apk add --no-cache \
     bash \
     curl \
     nano \
+    python3 \
+    py3-pip \
     openssh \
     sudo \
     shadow \
-    tzdata \
-    gcc \
-    musl-dev \
-    libffi-dev \
-    cargo
+    tzdata
 
 # Create user (password will be set at runtime in entrypoint.sh)
 RUN useradd -m -s /bin/bash ${USERNAME} && \
@@ -37,15 +35,17 @@ RUN mkdir -p /run/sshd && \
     sed -i 's/#PubkeyAuthentication.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config && \
     ssh-keygen -A
 
-# Install LiteLLM and proxy dependencies
-RUN pip install --no-cache-dir \
+# Install LiteLLM and dependencies (lightweight - no database/UI support)
+RUN pip3 install --no-cache-dir --break-system-packages \
     litellm \
-    aiohttp fastapi uvicorn pydantic pydantic-settings jinja2 click \
+    aiohttp fastapi uvicorn pydantic jinja2 click \
     python-dotenv httpx openai tiktoken tokenizers \
     gunicorn uvloop backoff pyyaml orjson apscheduler \
     fastapi-sso pyjwt python-multipart cryptography \
-    pynacl websockets jsonschema importlib-metadata \
-    redis boto3 rich
+    pynacl websockets boto3 azure-identity azure-storage-blob \
+    mcp litellm-proxy-extras litellm-enterprise \
+    restrictedpython rich polars soundfile rq jsonschema \
+    importlib-metadata fastuuid
 
 # Switch to user
 USER ${USERNAME}
@@ -68,7 +68,7 @@ USER root
 COPY scripts/welcome-motd.sh /etc/profile.d/welcome.sh
 RUN chmod +x /etc/profile.d/welcome.sh
 
-# Copy entrypoint script (supports CONFIG_REPO_URL for remote config fetch)
+# Copy entrypoint script
 COPY scripts/entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
