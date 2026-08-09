@@ -1,0 +1,6 @@
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "http://PROXY_IP:4000",
+    "ANTHROPIC_API_KEY": "DUMMY_KEY"
+  }
+}

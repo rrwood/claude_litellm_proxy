@@ -1,0 +1,21 @@
+# Claude Code LiteLLM Proxy Configuration
+# -----------------------------------------
+# Source this file before running Claude Code:
+#
+#   Linux/Mac:  source client-env.example && claude
+#   PowerShell: Get-Content client-env.example | ForEach-Object { if ($_ -match '^export\s+(\w+)=(.*)') { [Environment]::SetEnvironmentVariable($matches[1], $matches[2], 'Process') } }; claude
+#
+# Or add these exports to your ~/.bashrc / ~/.zshrc for permanent use.
+#
+# IMPORTANT: Run 'claude /logout' first if you're logged into claude.ai.
+
+# Point Claude Code at the LiteLLM proxy (replace with your proxy IP)
+export ANTHROPIC_BASE_URL=http://192.168.111.50:4000
+
+# Master key configured in litellm_config.yaml
+export ANTHROPIC_API_KEY=DUMMY_KEY
+
+# Available models (set via /model in Claude Code):
+#   claude-sonnet-4-6        -> NVIDIA NIM deepseek-v4-pro
+#   claude-opus-4-7          -> NVIDIA NIM nemotron-3-ultra-550b
+#   claude-haiku-4-5-20251001 -> NVIDIA NIM llama-3.3-70b (default)
