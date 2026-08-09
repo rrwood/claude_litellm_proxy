@@ -39,7 +39,7 @@ RUN mkdir -p /run/sshd && \
 # Pin litellm to last stable version (1.96.0 has broken FastAPI import)
 RUN pip install --no-cache-dir \
     'litellm>=1.60,<1.90' \
-    gunicorn uvloop backoff orjson apscheduler \
+    gunicorn uvicorn uvloop backoff orjson apscheduler \
     fastapi fastapi-sso pyjwt python-multipart cryptography \
     pynacl websockets jsonschema \
     pydantic-settings redis boto3 rich
