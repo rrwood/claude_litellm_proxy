@@ -202,7 +202,6 @@ The script auto-locates the LiteLLM install via Python and is safe to re-run. Fo
 ## Documentation
 
 - **[docs/PORTAINER.md](docs/PORTAINER.md)** - Complete Portainer deployment guide (Recommended)
-- **[docs/QUICKSTART.md](docs/QUICKSTART.md)** - Fast docker-compose deployment
 - **[docs/CLIENT_SETUP.md](docs/CLIENT_SETUP.md)** - Configure Claude Code clients
 - **[docs/litellm-output-config-patch.md](docs/litellm-output-config-patch.md)** - Patch for `output_config` leak to non-Anthropic providers
 
@@ -247,9 +246,9 @@ Or set `USER_PASSWORD` in `.env` before deploying.
 ## Available Models
 
 The proxy maps these Claude models to NVIDIA NIM models:
-- `claude-sonnet-4-6` → `deepseek-ai/deepseek-v4-pro` (default)
+- `claude-haiku-4-5-20251001` → `meta/llama-3.3-70b-instruct` (default)
+- `claude-sonnet-4-6` → `deepseek-ai/deepseek-v4-pro`
 - `claude-opus-4-7` → `nvidia/nemotron-3-ultra-550b-a55b`
-- `claude-haiku-4-5-20251001` → `meta/llama-3.3-70b-instruct`
 
 You can also request `gemini-2.5-flash` directly (requires GOOGLE_API_KEY).
 
@@ -272,17 +271,9 @@ The proxy includes built-in interactive API documentation via Swagger UI for man
 
 ## Changing Model Mappings
 
-To change which models the proxy routes to, edit `config/litellm_config.yaml` in this repo.
+To change which models the proxy routes to, edit `config/litellm_config.yaml` in this repo, push the change, and redeploy via Portainer (Pull and redeploy).
 
-**With remote config (recommended):** Set `CONFIG_REPO_URL` in your `.env` to point at the raw GitHub URL for your config file. On each container restart, the entrypoint fetches the latest config automatically. If the fetch fails, the container falls back to the config baked into the image.
-
-```env
-CONFIG_REPO_URL=https://raw.githubusercontent.com/rrwood/claude_litellm_proxy/main/config/litellm_config.yaml
-```
-
-Workflow: edit config in GitHub, commit, restart the container.
-
-**Without remote config:** SSH into the container and edit `~/.config/litellm/litellm_config.yaml` directly, then restart.
+Alternatively, SSH into the container and edit `~/.config/litellm/litellm_config.yaml` directly, then restart LiteLLM.
 
 ## Limitations
 
