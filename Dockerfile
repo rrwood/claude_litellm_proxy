@@ -36,14 +36,13 @@ RUN mkdir -p /run/sshd && \
     sed -i 's/#PubkeyAuthentication.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config && \
     ssh-keygen -A
 
-# Install everything in one call so pip resolves all constraints together
+# Pin litellm to last stable version (1.96.0 has broken FastAPI import)
 RUN pip install --no-cache-dir \
-    litellm \
-    'fastapi>=0.136.3,<0.141' \
+    'litellm>=1.60,<1.90' \
     gunicorn uvloop backoff orjson apscheduler \
-    fastapi-sso pyjwt python-multipart cryptography \
+    fastapi fastapi-sso pyjwt python-multipart cryptography \
     pynacl websockets jsonschema \
-    redis boto3 rich expression
+    redis boto3 rich
 
 # Switch to user
 USER ${USERNAME}
