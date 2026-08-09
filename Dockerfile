@@ -36,14 +36,12 @@ RUN mkdir -p /run/sshd && \
     sed -i 's/#PubkeyAuthentication.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config && \
     ssh-keygen -A
 
-# Install LiteLLM and proxy dependencies explicitly
-RUN pip install --no-cache-dir \
-    litellm \
-    aiohttp fastapi uvicorn pydantic pydantic-settings jinja2 click \
-    python-dotenv httpx openai tiktoken tokenizers \
-    gunicorn uvloop backoff pyyaml orjson apscheduler \
+# Install LiteLLM first (pulls correct FastAPI version), then extras
+RUN pip install --no-cache-dir litellm && \
+    pip install --no-cache-dir \
+    gunicorn uvloop backoff orjson apscheduler \
     fastapi-sso pyjwt python-multipart cryptography \
-    pynacl websockets jsonschema importlib-metadata \
+    pynacl websockets jsonschema \
     redis boto3 rich expression
 
 # Switch to user
