@@ -35,17 +35,8 @@ RUN mkdir -p /run/sshd && \
     sed -i 's/#PubkeyAuthentication.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config && \
     ssh-keygen -A
 
-# Install LiteLLM and dependencies (lightweight - no database/UI support)
-RUN pip3 install --no-cache-dir --break-system-packages \
-    litellm \
-    aiohttp fastapi uvicorn pydantic jinja2 click \
-    python-dotenv httpx openai tiktoken tokenizers \
-    gunicorn uvloop backoff pyyaml orjson apscheduler \
-    fastapi-sso pyjwt python-multipart cryptography \
-    pynacl websockets boto3 azure-identity azure-storage-blob \
-    mcp litellm-proxy-extras litellm-enterprise \
-    restrictedpython rich polars soundfile rq jsonschema \
-    importlib-metadata fastuuid
+# Install LiteLLM with all proxy dependencies
+RUN pip3 install --no-cache-dir --break-system-packages 'litellm[proxy]'
 
 # Switch to user
 USER ${USERNAME}
