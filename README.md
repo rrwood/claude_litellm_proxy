@@ -1,6 +1,6 @@
 # Claude LiteLLM Proxy
 
-A Docker container running LiteLLM proxy that translates Anthropic API calls to NVIDIA NIM API. Point Claude Code CLI at this proxy to use free NVIDIA NIM models instead of paid Claude API credits. Deploy once via Portainer or Docker Compose, then connect multiple Claude Code clients from any machine on your network. All Claude model requests (Opus, Sonnet, Haiku) are automatically mapped to NVIDIA NIM models with support for SSH access, auto-start on boot, and simple environment-based configuration.
+A Docker container running LiteLLM proxy that translates Anthropic API calls to free AI models. Point Claude Code CLI at this proxy to use free NVIDIA NIM and OpenRouter models instead of paid Claude API credits. Deploy once via Portainer or Docker Compose, then connect multiple Claude Code clients from any machine on your network. All Claude model requests (Opus, Sonnet, Haiku) are automatically mapped to free models, with automatic fallback to OpenRouter if NIM is unavailable. Model config is pulled from GitHub on startup, so mapping changes only need a container restart — no rebuild.
 
 ## Example Deployment
 
@@ -12,8 +12,8 @@ One proxy server can serve multiple Claude Code clients across different platfor
                            │                                 │
                            │  ┌───────────────────────────┐  │
     ┌──────────────────────┼─►│  LiteLLM Proxy Container  │  │
-    │                      │  │  (192.168.1.100:4000)     │──┼──► NVIDIA NIM API
-    │                      │  │                           │  │    (Free Tier)
+    │                      │  │  (192.168.1.100:4000)     │──┼──► NVIDIA NIM API (primary)
+    │                      │  │                           │──┼──► OpenRouter API (fallback)
     │                      │  │  • Deployed via GitHub    │  │
     │                      │  │  • Auto-start on boot     │  │
     │  Claude Code CLI     │  └───────────────────────────┘  │
@@ -44,12 +44,16 @@ One proxy server can serve multiple Claude Code clients across different platfor
 ```
 
 ### Before you start 
-- Get an NVIDIA NIM API Key
-- Go to build.nvidia.com and create a free NVIDIA account
-- Complete  verification via SMS or email (some regions may have trouble receiving the code — try a different number if needed)
-- Navigate to any model page and click “Get API Key” (or go to the API Keys section)
-- Click “Create API Key” and copy it — it’s only shown once
-The key format looks like nvapi-...
+- **NVIDIA NIM API Key** (primary models)
+  - Go to build.nvidia.com and create a free NVIDIA account
+  - Complete verification via SMS or email (some regions may have trouble receiving the code — try a different number if needed)
+  - Navigate to any model page and click “Get API Key” (or go to the API Keys section)
+  - Click “Create API Key” and copy it — it’s only shown once
+  - The key format looks like `nvapi-...`
+- **OpenRouter API Key** (fallback, optional but recommended)
+  - Go to openrouter.ai and create a free account (no payment method needed)
+  - Go to Keys > create a new key
+  - The key format looks like `sk-or-v1-...`
 
 
 ## Quick Start
@@ -79,9 +83,10 @@ The key format looks like nvapi-...
    - Click **"Load variables from .env file"** and upload a local `.env` file containing your keys:
      ```env
      NVIDIA_NIM_API_KEY=nvapi-your_actual_key
-     GOOGLE_API_KEY=your_google_key          # optional, for Gemini models
+     OPENROUTER_API_KEY=sk-or-v1-your_key    # optional, enables fallback
+     GOOGLE_API_KEY=your_google_key           # optional, for Gemini models
      ```
-   - Or edit the `NVIDIA_NIM_API_KEY` variable inline
+   - Or edit the variables inline
 
 4. **Click "Update the stack"** to restart with your keys — done!
 
@@ -120,10 +125,11 @@ docker-compose up -d
 
 ### 3. Configure NVIDIA NIM API Key
 
-Set the API key in your `.env` file:
+Set API keys in your `.env` file:
 ```env
 NVIDIA_NIM_API_KEY=nvapi-your_actual_key
-GOOGLE_API_KEY=your_google_key    # optional, for Gemini models
+OPENROUTER_API_KEY=sk-or-v1-your_key    # optional, enables fallback
+GOOGLE_API_KEY=your_google_key           # optional, for Gemini models
 ```
 
 Restart the container:
@@ -243,14 +249,29 @@ Or set `USER_PASSWORD` in `.env` before deploying.
 
 ## Available Models
 
-The proxy maps these Claude models to NVIDIA NIM models:
-- `claude-haiku-4-5` → `meta/llama-3.3-70b-instruct` (default)
-- `claude-sonnet-5` → `deepseek-ai/deepseek-v4-pro`
-- `claude-opus-5` → `nvidia/nemotron-3-ultra-550b-a55b`
+### Primary Models (NVIDIA NIM)
+
+| Claude Model | NIM Backend | Typical Speed |
+|---|---|---|
+| `claude-opus-5` | nvidia/nemotron-3-ultra-550b-a55b | ~3 sec |
+| `claude-sonnet-5` | deepseek-ai/deepseek-v4-flash-0731 | ~60 sec |
+| `claude-haiku-4-5` (default) | nvidia/llama-3.3-nemotron-super-49b-v1.5 | ~30 sec |
 
 Legacy model names (`claude-haiku-4-5-20251001`, `claude-sonnet-4-6`, `claude-opus-4-7`) are also supported as aliases.
 
-You can also request `gemini-2.5-flash` directly (requires GOOGLE_API_KEY).
+### Fallback Model (OpenRouter)
+
+If any NIM model fails (retired, rate-limited, down), LiteLLM automatically retries on OpenRouter:
+
+| Fallback | OpenRouter Backend | Typical Speed |
+|---|---|---|
+| `fallback` | nvidia/nemotron-3-super-120b-a12b:free | ~90 sec |
+
+The fallback is slow but keeps you working while you find replacement models. Requires `OPENROUTER_API_KEY`.
+
+### Additional Models
+
+You can also request `gemini-2.5-flash` directly (requires `GOOGLE_API_KEY`).
 
 ## Swagger API Documentation
 
@@ -287,21 +308,24 @@ Alternatively, SSH into the container and edit `~/.config/litellm/litellm_config
 ## Limitations
 
 - **Alpine-only**: This project uses Alpine Linux. The official Debian-based LiteLLM database image fails with exit code 132 (SIGILL) on some x86_64 hosts. If you need the Admin UI, you may need a different host or a custom Alpine build.
-- **Free tier only**: Uses NVIDIA NIM free tier models. For higher limits, check NVIDIA NIM pricing.
-- **Rate limits**: Subject to NVIDIA NIM free tier rate limits (see https://build.nvidia.com/nim)
+- **Free tier only**: Uses NVIDIA NIM and OpenRouter free tier models. Response times vary (3-90 seconds depending on model and load).
+- **Rate limits**: Subject to NVIDIA NIM and OpenRouter free tier rate limits
 - **Model differences**: NVIDIA NIM models are not identical to Claude models
 
 ## How It Works
 
 ```
-Claude Code CLI → LiteLLM Proxy → NVIDIA NIM API
-                  (translates Anthropic API → NVIDIA NIM API)
+Claude Code CLI → LiteLLM Proxy → NVIDIA NIM API (primary)
+                                 ↘ OpenRouter API (fallback)
 ```
 
 LiteLLM acts as a proxy that:
 1. Receives requests in Anthropic's API format
-2. Translates them to NVIDIA NIM API format
-3. Sends responses back in Anthropic's format
+2. Translates them to the backend provider's format (NIM or OpenRouter)
+3. If the primary model fails, automatically retries on the fallback
+4. Sends responses back in Anthropic's format
+
+Model config is pulled from GitHub on container startup (`CONFIG_REPO_URL`), so updating model mappings is: edit config, push, restart container.
 
 ## Contributing
 
