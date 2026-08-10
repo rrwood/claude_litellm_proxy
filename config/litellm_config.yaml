@@ -40,7 +40,7 @@ model_list:
   # Fallback model (OpenRouter - reliable, used when NIM is down)
   - model_name: fallback
     litellm_params:
-      model: openrouter/google/gemma-3-27b-it:free
+      model: openrouter/nvidia/nemotron-3-super-120b-a12b:free
       api_key: os.environ/OPENROUTER_API_KEY
       drop_params: true
 
