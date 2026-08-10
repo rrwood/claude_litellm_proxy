@@ -53,6 +53,18 @@ else
     echo "No CONFIG_REPO_URL set, using baked-in config"
 fi
 
+# Write API keys to user's .env so they survive su login shell
+ENV_FILE="$USER_HOME/.config/litellm/.env"
+[ -n "$NVIDIA_NIM_API_KEY" ] && [ "$NVIDIA_NIM_API_KEY" != "CHANGE_ME" ] && \
+    (grep -q '^NVIDIA_NIM_API_KEY=' "$ENV_FILE" 2>/dev/null && \
+     sed -i "s|^NVIDIA_NIM_API_KEY=.*|NVIDIA_NIM_API_KEY=$NVIDIA_NIM_API_KEY|" "$ENV_FILE" || \
+     echo "NVIDIA_NIM_API_KEY=$NVIDIA_NIM_API_KEY" >> "$ENV_FILE")
+[ -n "$GOOGLE_API_KEY" ] && [ "$GOOGLE_API_KEY" != "CHANGE_ME" ] && \
+    (grep -q '^GOOGLE_API_KEY=' "$ENV_FILE" 2>/dev/null && \
+     sed -i "s|^GOOGLE_API_KEY=.*|GOOGLE_API_KEY=$GOOGLE_API_KEY|" "$ENV_FILE" || \
+     echo "GOOGLE_API_KEY=$GOOGLE_API_KEY" >> "$ENV_FILE")
+chown ${USERNAME}:${USERNAME} "$ENV_FILE"
+
 # Start LiteLLM proxy in the background as the user
 echo "Starting LiteLLM proxy on port 4000..."
 su - ${USERNAME} -c "$USER_HOME/.config/litellm/start-litellm.sh" &
