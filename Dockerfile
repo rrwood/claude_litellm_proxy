@@ -13,6 +13,7 @@ ENV USER_PASSWORD=${USER_PASSWORD}
 RUN apk update && apk add --no-cache \
     bash \
     curl \
+    git \
     nano \
     openssh \
     sudo \
