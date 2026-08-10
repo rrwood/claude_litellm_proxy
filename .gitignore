@@ -31,6 +31,6 @@ Thumbs.db
 *.log
 sync_to_github.ps1
 
-# Gittool (local deploy tooling)
-gittool-readme.md
+# gittool - auto-managed, not for committing
 gittool.config.json
+gittool-readme.md
