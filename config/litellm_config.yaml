@@ -2,7 +2,7 @@ model_list:
   # Claude 5 family
   - model_name: claude-sonnet-5
     litellm_params:
-      model: nvidia_nim/deepseek-ai/deepseek-v4-pro
+      model: nvidia_nim/deepseek-ai/deepseek-v4-flash-0731
       api_key: os.environ/NVIDIA_NIM_API_KEY
       drop_params: true
 
@@ -15,7 +15,7 @@ model_list:
   # Legacy model names (keep for backwards compatibility)
   - model_name: claude-sonnet-4-6
     litellm_params:
-      model: nvidia_nim/deepseek-ai/deepseek-v4-pro
+      model: nvidia_nim/deepseek-ai/deepseek-v4-flash-0731
       api_key: os.environ/NVIDIA_NIM_API_KEY
       drop_params: true
 
@@ -28,13 +28,13 @@ model_list:
   # Haiku
   - model_name: claude-haiku-4-5-20251001
     litellm_params:
-      model: nvidia_nim/meta/llama-3.3-70b-instruct
+      model: nvidia_nim/nvidia/llama-3.3-nemotron-super-49b-v1.5
       api_key: os.environ/NVIDIA_NIM_API_KEY
       drop_params: true
 
   - model_name: claude-haiku-4-5
     litellm_params:
-      model: nvidia_nim/meta/llama-3.3-70b-instruct
+      model: nvidia_nim/nvidia/llama-3.3-nemotron-super-49b-v1.5
       api_key: os.environ/NVIDIA_NIM_API_KEY
       drop_params: true
 
