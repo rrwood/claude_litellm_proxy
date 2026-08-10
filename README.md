@@ -76,12 +76,14 @@ The key format looks like nvapi-...
 
 3. **Deploy** and SSH to add NVIDIA NIM API key:
    ```bash
-   ssh litellm@192.168.1.100  # Use your CONTAINER_IP
+   ssh litellm@192.168.1.100  # Use your CONTAINER_IP and USERNAME
    nano ~/.config/litellm/.env
    # Add: NVIDIA_NIM_API_KEY=your_actual_key
    ```
 
 4. **Restart** in Portainer and you're done!
+
+> **Note:** The `.env` file with your API keys lives inside the container. If you rebuild the image (not just restart), you'll need to SSH in and re-add your keys. The model config (`litellm_config.yaml`) is pulled from GitHub automatically on startup, so model changes only need a restart.
 
 Detailed guide: [docs/PORTAINER.md](docs/PORTAINER.md)
 
@@ -246,9 +248,11 @@ Or set `USER_PASSWORD` in `.env` before deploying.
 ## Available Models
 
 The proxy maps these Claude models to NVIDIA NIM models:
-- `claude-haiku-4-5-20251001` → `meta/llama-3.3-70b-instruct` (default)
-- `claude-sonnet-4-6` → `deepseek-ai/deepseek-v4-pro`
-- `claude-opus-4-7` → `nvidia/nemotron-3-ultra-550b-a55b`
+- `claude-haiku-4-5` → `meta/llama-3.3-70b-instruct` (default)
+- `claude-sonnet-5` → `deepseek-ai/deepseek-v4-pro`
+- `claude-opus-5` → `nvidia/nemotron-3-ultra-550b-a55b`
+
+Legacy model names (`claude-haiku-4-5-20251001`, `claude-sonnet-4-6`, `claude-opus-4-7`) are also supported as aliases.
 
 You can also request `gemini-2.5-flash` directly (requires GOOGLE_API_KEY).
 
@@ -271,9 +275,18 @@ The proxy includes built-in interactive API documentation via Swagger UI for man
 
 ## Changing Model Mappings
 
-To change which models the proxy routes to, edit `config/litellm_config.yaml` in this repo, push the change, and redeploy via Portainer (Pull and redeploy).
+The proxy pulls `config/litellm_config.yaml` from this GitHub repo on every container startup via the `CONFIG_REPO_URL` environment variable (enabled by default in docker-compose). To update model mappings:
 
-Alternatively, SSH into the container and edit `~/.config/litellm/litellm_config.yaml` directly, then restart LiteLLM.
+1. Edit `config/litellm_config.yaml` in this repo
+2. Push the change
+3. Restart the container (no rebuild needed)
+
+To override the config source, set these environment variables in your `.env` or Portainer stack:
+- `CONFIG_REPO_URL` - Git repo URL (default: this repo)
+- `CONFIG_REPO_BRANCH` - Branch to pull from (default: `main`)
+- `CONFIG_REPO_PATH` - Path to config file in the repo (default: `config/litellm_config.yaml`)
+
+Alternatively, SSH into the container and edit `~/.config/litellm/litellm_config.yaml` directly, then restart LiteLLM (changes will be overwritten on next container restart if `CONFIG_REPO_URL` is set).
 
 ## Limitations
 
