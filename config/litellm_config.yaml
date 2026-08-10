@@ -1,5 +1,5 @@
 model_list:
-  # Claude 5 family
+  # Claude 5 family - primary (NVIDIA NIM)
   - model_name: claude-sonnet-5
     litellm_params:
       model: nvidia_nim/deepseek-ai/deepseek-v4-flash-0731
@@ -12,7 +12,13 @@ model_list:
       api_key: os.environ/NVIDIA_NIM_API_KEY
       drop_params: true
 
-  # Legacy model names (keep for backwards compatibility)
+  - model_name: claude-haiku-4-5
+    litellm_params:
+      model: nvidia_nim/nvidia/llama-3.3-nemotron-super-49b-v1.5
+      api_key: os.environ/NVIDIA_NIM_API_KEY
+      drop_params: true
+
+  # Legacy model names
   - model_name: claude-sonnet-4-6
     litellm_params:
       model: nvidia_nim/deepseek-ai/deepseek-v4-flash-0731
@@ -25,20 +31,20 @@ model_list:
       api_key: os.environ/NVIDIA_NIM_API_KEY
       drop_params: true
 
-  # Haiku
   - model_name: claude-haiku-4-5-20251001
     litellm_params:
       model: nvidia_nim/nvidia/llama-3.3-nemotron-super-49b-v1.5
       api_key: os.environ/NVIDIA_NIM_API_KEY
       drop_params: true
 
-  - model_name: claude-haiku-4-5
+  # Fallback model (OpenRouter - reliable, used when NIM is down)
+  - model_name: fallback
     litellm_params:
-      model: nvidia_nim/nvidia/llama-3.3-nemotron-super-49b-v1.5
-      api_key: os.environ/NVIDIA_NIM_API_KEY
+      model: openrouter/google/gemma-3-27b-it:free
+      api_key: os.environ/OPENROUTER_API_KEY
       drop_params: true
 
-# Direct Gemini access
+  # Direct Gemini access
   - model_name: gemini-2.5-flash
     litellm_params:
       model: gemini/gemini-2.5-flash
@@ -47,11 +53,14 @@ model_list:
 
 litellm_settings:
   drop_params: true
+  fallbacks:
+    - claude-sonnet-5: [fallback]
+    - claude-sonnet-4-6: [fallback]
+    - claude-opus-5: [fallback]
+    - claude-opus-4-7: [fallback]
+    - claude-haiku-4-5: [fallback]
+    - claude-haiku-4-5-20251001: [fallback]
 
 general_settings:
   master_key: DUMMY_KEY
-  # Default model when client doesn't specify one
   default_model: claude-haiku-4-5
-  # SQLite database for Admin UI support (only for UI-enabled deployments)
-  # Uncomment for docker-compose.external-network.yml (Debian with UI)
-  # database_url: "sqlite:////home/litellm/.config/litellm/litellm.db"

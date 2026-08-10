@@ -63,6 +63,10 @@ ENV_FILE="$USER_HOME/.config/litellm/.env"
     (grep -q '^GOOGLE_API_KEY=' "$ENV_FILE" 2>/dev/null && \
      sed -i "s|^GOOGLE_API_KEY=.*|GOOGLE_API_KEY=$GOOGLE_API_KEY|" "$ENV_FILE" || \
      echo "GOOGLE_API_KEY=$GOOGLE_API_KEY" >> "$ENV_FILE")
+[ -n "$OPENROUTER_API_KEY" ] && [ "$OPENROUTER_API_KEY" != "CHANGE_ME" ] && \
+    (grep -q '^OPENROUTER_API_KEY=' "$ENV_FILE" 2>/dev/null && \
+     sed -i "s|^OPENROUTER_API_KEY=.*|OPENROUTER_API_KEY=$OPENROUTER_API_KEY|" "$ENV_FILE" || \
+     echo "OPENROUTER_API_KEY=$OPENROUTER_API_KEY" >> "$ENV_FILE")
 chown ${USERNAME}:${USERNAME} "$ENV_FILE"
 
 # Start LiteLLM proxy in the background as the user
