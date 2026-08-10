@@ -21,6 +21,8 @@ services:
       - BUILD_HOSTNAME=${CONTAINER_HOSTNAME:-litellm-proxy}
       - USERNAME=${USERNAME:-litellm}
       - USER_PASSWORD=${USER_PASSWORD:-changeme123}
+      - NVIDIA_NIM_API_KEY=${NVIDIA_NIM_API_KEY:-}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
       - CONFIG_REPO_URL=${CONFIG_REPO_URL:-https://github.com/rrwood/claude_litellm_proxy.git}
       - CONFIG_REPO_BRANCH=${CONFIG_REPO_BRANCH:-main}
       - CONFIG_REPO_PATH=${CONFIG_REPO_PATH:-config/litellm_config.yaml}
