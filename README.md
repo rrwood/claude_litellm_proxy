@@ -74,16 +74,18 @@ The key format looks like nvapi-...
    - Compose path: `docker-compose.no-ui.external-network.yml` (for existing macvlan networks) or `docker-compose.no-ui.yml` (to auto-create network)
    - Upload your `.env` file
 
-3. **Deploy** and SSH to add NVIDIA NIM API key:
-   ```bash
-   ssh litellm@192.168.1.100  # Use your CONTAINER_IP and USERNAME
-   nano ~/.config/litellm/.env
-   # Add: NVIDIA_NIM_API_KEY=your_actual_key
-   ```
+3. **Add your API keys** in Portainer:
+   - Go to **Stacks → litellm-proxy → Environment variables**
+   - Click **"Load variables from .env file"** and upload a local `.env` file containing your keys:
+     ```env
+     NVIDIA_NIM_API_KEY=nvapi-your_actual_key
+     GOOGLE_API_KEY=your_google_key          # optional, for Gemini models
+     ```
+   - Or edit the `NVIDIA_NIM_API_KEY` variable inline
 
-4. **Restart** in Portainer and you're done!
+4. **Click "Update the stack"** to restart with your keys — done!
 
-> **Note:** The `.env` file with your API keys lives inside the container. If you rebuild the image (not just restart), you'll need to SSH in and re-add your keys. The model config (`litellm_config.yaml`) is pulled from GitHub automatically on startup, so model changes only need a restart.
+> **Note:** API keys are stored in Portainer's stack variables and survive image rebuilds and container restarts. The model config (`litellm_config.yaml`) is pulled from GitHub automatically on startup, so model mapping changes only need a container restart.
 
 Detailed guide: [docs/PORTAINER.md](docs/PORTAINER.md)
 
@@ -118,16 +120,10 @@ docker-compose up -d
 
 ### 3. Configure NVIDIA NIM API Key
 
-SSH into the container:
-```bash
-ssh litellm@YOUR_CONTAINER_IP
-# Default password: changeme123 (change this!)
-```
-
-Edit the API key:
-```bash
-nano ~/.config/litellm/.env
-# Add your NVIDIA NIM API key
+Set the API key in your `.env` file:
+```env
+NVIDIA_NIM_API_KEY=nvapi-your_actual_key
+GOOGLE_API_KEY=your_google_key    # optional, for Gemini models
 ```
 
 Restart the container:
