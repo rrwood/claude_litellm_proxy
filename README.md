@@ -206,6 +206,7 @@ The script auto-locates the LiteLLM install via Python and is safe to re-run. Fo
 ## Documentation
 
 - **[docs/PORTAINER.md](docs/PORTAINER.md)** - Complete Portainer deployment guide (Recommended)
+- **[docs/portainer-alternatives.md](docs/portainer-alternatives.md)** - Deploy without Portainer (Dockge, Coolify, plain Docker Compose)
 - **[docs/CLIENT_SETUP.md](docs/CLIENT_SETUP.md)** - Configure Claude Code clients
 - **[docs/litellm-output-config-patch.md](docs/litellm-output-config-patch.md)** - Patch for `output_config` leak to non-Anthropic providers
 
