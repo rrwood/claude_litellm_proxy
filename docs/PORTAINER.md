@@ -196,7 +196,20 @@ services:
    - LiteLLM API: `http://DOCKER_HOST_IP:4000`
    - SSH: `ssh -p 2222 litellm@DOCKER_HOST_IP`
 
+## Model Config Updates
+
+The container automatically pulls `litellm_config.yaml` from GitHub on every startup. This is controlled by the `CONFIG_REPO_URL` environment variable, which defaults to this project's repo in the docker-compose files.
+
+**To pick up model mapping changes:** just restart the container in Portainer. No rebuild needed.
+
+**To override the config source**, add these environment variables to your stack:
+- `CONFIG_REPO_URL` — Git repo URL (default: `https://github.com/rrwood/claude_litellm_proxy.git`)
+- `CONFIG_REPO_BRANCH` — Branch to pull from (default: `main`)
+- `CONFIG_REPO_PATH` — Path to config file in the repo (default: `config/litellm_config.yaml`)
+
 ## Updating the Stack
+
+Use "Pull and redeploy" when the Dockerfile, scripts, or dependencies change. This is separate from model config updates above — those only need a restart.
 
 ### Method 1: Pull and Redeploy (Recommended)
 
@@ -319,6 +332,9 @@ You exceeded your current quota, please check your plan and billing details
 | `NVIDIA_NIM_API_KEY` | *(none)* | NVIDIA NIM API key | **Yes** |
 | `OPENROUTER_API_KEY` | *(none)* | OpenRouter API key (fallback) | No |
 | `GOOGLE_API_KEY` | *(none)* | Google API key (Gemini models) | No |
+| `CONFIG_REPO_URL` | This project's repo | Git repo to pull config from on startup | No |
+| `CONFIG_REPO_BRANCH` | `main` | Branch to pull config from | No |
+| `CONFIG_REPO_PATH` | `config/litellm_config.yaml` | Path to config file in repo | No |
 
 ## Post-Deployment
 
