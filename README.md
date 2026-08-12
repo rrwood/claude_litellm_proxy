@@ -58,88 +58,31 @@ One proxy server can serve multiple Claude Code clients across different platfor
 
 ## Quick Start
 
-### Portainer Deployment (Recommended)
+### Portainer (Recommended)
 
-**The easiest way - no command line needed!**
+The easiest way — no command line needed. Point Portainer at this GitHub repo, upload a `.env` file with your network settings and API keys, and deploy. Portainer handles building, environment variables, and one-click updates.
 
-1. **Download** [.env.example](https://github.com/rrwood/claude_litellm_proxy/blob/main/.env.example), save as `.env`, and customize:
-   ```env
-   CONTAINER_IP=192.168.1.100          # Change to available IP
-   USER_PASSWORD=your_secure_password  # Change this!
-   NETWORK_SUBNET=192.168.1.0/24      # Your network
-   NETWORK_GATEWAY=192.168.1.1        # Your router
-   ```
+Full walkthrough: **[docs/PORTAINER.md](docs/PORTAINER.md)**
 
-2. **Create stack** in Portainer:
-   - Stacks → Add stack → Name: `litellm-proxy`
-   - Build method: **Repository**
-   - Repository URL: `https://github.com/rrwood/claude_litellm_proxy`
-   - Reference: `refs/heads/main`
-   - Compose path: `docker-compose.no-ui.external-network.yml` (for existing macvlan networks) or `docker-compose.no-ui.yml` (to auto-create network)
-   - Upload your `.env` file
+### Docker Compose
 
-3. **Add your API keys** in Portainer:
-   - Go to **Stacks → litellm-proxy → Environment variables**
-   - Click **"Load variables from .env file"** and upload a local `.env` file containing your keys:
-     ```env
-     NVIDIA_NIM_API_KEY=nvapi-your_actual_key
-     OPENROUTER_API_KEY=sk-or-v1-your_key    # optional, enables fallback
-     GOOGLE_API_KEY=your_google_key           # optional, for Gemini models
-     ```
-   - Or edit the variables inline
-
-4. **Click "Update the stack"** to restart with your keys — done!
-
-> **Note:** API keys are stored in Portainer's stack variables and survive image rebuilds and container restarts. The model config (`litellm_config.yaml`) is pulled from GitHub automatically on startup, so model mapping changes only need a container restart.
-
-Detailed guide: [docs/PORTAINER.md](docs/PORTAINER.md)
-
----
-
-### Docker Compose Deployment (Alternative)
-
-**For command-line users:**
-
-#### Prerequisites
-
-- Docker and Docker Compose installed
-- A network with static IP capability (or use bridge networking)
-- NVIDIA NIM API key from https://build.nvidia.com/nim (free)
-
-#### 1. Clone and Configure
+For command-line users — clone the repo, configure `.env`, and run:
 
 ```bash
 git clone https://github.com/rrwood/claude_litellm_proxy.git
 cd claude_litellm_proxy
-
-# Copy and edit environment file
 cp .env.example .env
-nano .env  # Update network settings for your environment
+nano .env  # Set network settings + API keys
+docker-compose -f docker-compose.no-ui.yml up -d --build
 ```
 
-#### 2. Deploy
+### Not Using Portainer?
 
-```bash
-docker-compose up -d
-```
+Dockge and Coolify are lightweight alternatives that can also manage this container. See **[docs/portainer-alternatives.md](docs/portainer-alternatives.md)** for setup instructions and a comparison.
 
-### 3. Configure NVIDIA NIM API Key
+### Configure Claude Code Clients
 
-Set API keys in your `.env` file:
-```env
-NVIDIA_NIM_API_KEY=nvapi-your_actual_key
-OPENROUTER_API_KEY=sk-or-v1-your_key    # optional, enables fallback
-GOOGLE_API_KEY=your_google_key           # optional, for Gemini models
-```
-
-Restart the container:
-```bash
-docker-compose restart
-```
-
-### 4. Configure Claude Code Clients
-
-On your client machine (Windows/Linux/Mac), set environment variables:
+On each client machine, point Claude Code at the proxy:
 
 **Windows (PowerShell):**
 ```powershell
@@ -153,7 +96,6 @@ export ANTHROPIC_BASE_URL=http://YOUR_CONTAINER_IP:4000
 export ANTHROPIC_API_KEY=DUMMY_KEY
 ```
 
-Then run:
 ```bash
 claude /logout  # Logout of claude.ai first
 claude          # Start using the proxy!
@@ -209,44 +151,6 @@ The script auto-locates the LiteLLM install via Python and is safe to re-run. Fo
 - **[docs/portainer-alternatives.md](docs/portainer-alternatives.md)** - Deploy without Portainer (Dockge, Coolify, plain Docker Compose)
 - **[docs/CLIENT_SETUP.md](docs/CLIENT_SETUP.md)** - Configure Claude Code clients
 - **[docs/litellm-output-config-patch.md](docs/litellm-output-config-patch.md)** - Patch for `output_config` leak to non-Anthropic providers
-
-## Configuration
-
-### Network Settings
-
-The default `docker-compose.no-ui.yml` auto-creates a macvlan network for direct network access. Update `.env` with your network settings:
-
-- `CONTAINER_IP` - Static IP for the container
-- `NETWORK_SUBNET` - Your network subnet (e.g., 192.168.111.0/24)
-- `NETWORK_GATEWAY` - Your network gateway (e.g., 192.168.111.254)
-- `NETWORK_INTERFACE` - Host interface (e.g., enp2s0, eth0)
-- `NETWORK_IP_RANGE` - IP range for macvlan (e.g., 192.168.111.48/29)
-
-### Using Existing Macvlan Network
-
-If you already have a `macvlan-for-direct-access` network:
-
-**Portainer:** Use compose path `docker-compose.no-ui.external-network.yml`
-
-**Docker Compose:**
-```bash
-docker-compose -f docker-compose.no-ui.external-network.yml up -d
-```
-
-### Using Bridge Networking (Alternative)
-
-If you don't have static IP capability, use bridge networking with port mapping. See the bridge networking section in [docs/PORTAINER.md](docs/PORTAINER.md).
-
-### Security
-
-**Change the default password immediately:**
-
-```bash
-ssh litellm@YOUR_CONTAINER_IP
-passwd
-```
-
-Or set `USER_PASSWORD` in `.env` before deploying.
 
 ## Available Models
 
