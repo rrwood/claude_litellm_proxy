@@ -69,43 +69,21 @@ TIMEZONE=America/New_York                 # Your timezone
    - Click **"Deploy the stack"**
    - Wait for deployment to complete
 
-### Step 3: Configure NVIDIA NIM API Key
+### Step 3: Add API Keys
 
-Once deployed, SSH into the container:
+1. Go to **Stacks → litellm-proxy → Environment variables**
+2. Click **"Load variables from .env file"** and upload a file containing your keys:
+   ```env
+   NVIDIA_NIM_API_KEY=nvapi-your_actual_key
+   OPENROUTER_API_KEY=sk-or-v1-your_key    # optional, enables fallback
+   GOOGLE_API_KEY=your_google_key           # optional, for Gemini models
+   ```
+   Or add them inline using **"+ add an environment variable"**
+3. Click **"Update the stack"** to restart with your keys
 
-```bash
-ssh litellm@YOUR_CONTAINER_IP
-# Use the password you set in USER_PASSWORD
-```
+API keys are stored in Portainer's stack variables and survive image rebuilds and container restarts.
 
-Add your NVIDIA NIM API key:
-
-```bash
-nano ~/.config/litellm/.env
-```
-
-Change this line:
-```env
-NVIDIA_NIM_API_KEY=your_nvidia_nim_api_key_here
-```
-
-To your actual key from https://build.nvidia.com/nim
-
-Save and exit (Ctrl+X, Y, Enter).
-
-### Step 4: Restart the Stack
-
-In Portainer:
-- Go to **Stacks** → **litellm-proxy**
-- Click **"Stop"**
-- Click **"Start"**
-
-Or via CLI:
-```bash
-docker restart litellm-proxy
-```
-
-### Step 5: Verify Deployment
+### Step 4: Verify Deployment
 
 Check the logs:
 - Portainer → Stacks → litellm-proxy → **Container logs**
@@ -144,6 +122,8 @@ NETWORK_SUBNET = 192.168.111.0/24
 NETWORK_GATEWAY = 192.168.111.254
 NETWORK_IP_RANGE = 192.168.111.48/29
 TIMEZONE = America/New_York
+NVIDIA_NIM_API_KEY = nvapi-your_actual_key
+OPENROUTER_API_KEY = sk-or-v1-your_key
 ```
 
 ## Network Configuration
@@ -228,15 +208,9 @@ services:
 
 1. Stop the stack
 2. Delete the stack (keeps volumes)
-3. Recreate following Step 2 above with your saved `.env` file
+3. Recreate following Step 2 above
 
-**Note:** Your NVIDIA NIM API key in `~/.config/litellm/.env` (inside the container) will be lost. Back it up first:
-
-```bash
-ssh litellm@YOUR_CONTAINER_IP
-cat ~/.config/litellm/.env
-# Copy the NVIDIA_NIM_API_KEY value
-```
+API keys stored in Portainer's stack variables are preserved when you delete and recreate a stack using the same name and environment variables.
 
 ## Troubleshooting
 
@@ -274,9 +248,7 @@ ps aux | grep litellm
 ```
 
 **Check for errors:**
-```bash
-cat ~/.config/litellm/.env    # Verify NVIDIA NIM API key is set
-```
+- Verify `NVIDIA_NIM_API_KEY` is set in Portainer stack environment variables
 
 **Manually start:**
 ```bash
@@ -344,6 +316,9 @@ You exceeded your current quota, please check your plan and billing details
 | `NETWORK_GATEWAY` | `192.168.1.1` | Network gateway IP | **Yes** |
 | `NETWORK_IP_RANGE` | `192.168.1.100/29` | IP range for macvlan | **Yes** |
 | `TIMEZONE` | `UTC` | Container timezone | No |
+| `NVIDIA_NIM_API_KEY` | *(none)* | NVIDIA NIM API key | **Yes** |
+| `OPENROUTER_API_KEY` | *(none)* | OpenRouter API key (fallback) | No |
+| `GOOGLE_API_KEY` | *(none)* | Google API key (Gemini models) | No |
 
 ## Post-Deployment
 
@@ -352,7 +327,6 @@ After successful deployment:
 1. **Configure clients:** See [CLIENT_SETUP.md](CLIENT_SETUP.md)
 2. **Test the proxy:** See [QUICKSTART.md](QUICKSTART.md) Step 5
 3. **Monitor usage:** Check logs in Portainer
-4. **Backup API key:** Save your NVIDIA NIM API key securely
 
 ## Benefits of Portainer Deployment
 
