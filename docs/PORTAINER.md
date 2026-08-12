@@ -203,7 +203,7 @@ The container automatically pulls `litellm_config.yaml` from GitHub on every sta
 **To pick up model mapping changes:** just restart the container in Portainer. No rebuild needed.
 
 **To override the config source**, add these environment variables to your stack:
-- `CONFIG_REPO_URL` — Git repo URL (default: `https://github.com/rrwood/claude_litellm_proxy.git`)
+- `CONFIG_REPO_URL` — Git repo URL (default: `https://github.com/rrwood/claude_litellm_proxy.git`). Set to `none` to disable config pull entirely and manage config manually.
 - `CONFIG_REPO_BRANCH` — Branch to pull from (default: `main`)
 - `CONFIG_REPO_PATH` — Path to config file in the repo (default: `config/litellm_config.yaml`)
 

@@ -204,11 +204,11 @@ The proxy pulls `config/litellm_config.yaml` from this GitHub repo on every cont
 3. Restart the container (no rebuild needed)
 
 To override the config source, set these environment variables in your `.env` or Portainer stack:
-- `CONFIG_REPO_URL` - Git repo URL (default: this repo)
+- `CONFIG_REPO_URL` - Git repo URL (default: this repo). Set to `none` to disable config pull entirely.
 - `CONFIG_REPO_BRANCH` - Branch to pull from (default: `main`)
 - `CONFIG_REPO_PATH` - Path to config file in the repo (default: `config/litellm_config.yaml`)
 
-Alternatively, SSH into the container and edit `~/.config/litellm/litellm_config.yaml` directly, then restart LiteLLM (changes will be overwritten on next container restart if `CONFIG_REPO_URL` is set).
+If you set `CONFIG_REPO_URL=none`, you can SSH into the container and edit `~/.config/litellm/litellm_config.yaml` directly. Changes will persist across restarts since nothing overwrites them.
 
 ## Limitations
 

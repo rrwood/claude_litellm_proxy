@@ -30,7 +30,9 @@ CONFIG_REPO_DIR="$USER_HOME/.config/litellm/config-repo"
 CONFIG_REPO_BRANCH="${CONFIG_REPO_BRANCH:-main}"
 CONFIG_REPO_PATH="${CONFIG_REPO_PATH:-config/litellm_config.yaml}"
 
-if [ -n "$CONFIG_REPO_URL" ]; then
+if [ "$CONFIG_REPO_URL" = "none" ] || [ "$CONFIG_REPO_URL" = "disabled" ]; then
+    echo "Config pull disabled (CONFIG_REPO_URL=$CONFIG_REPO_URL), using local config"
+elif [ -n "$CONFIG_REPO_URL" ]; then
     echo "Fetching config from $CONFIG_REPO_URL (branch: $CONFIG_REPO_BRANCH)..."
     if [ -d "$CONFIG_REPO_DIR/.git" ]; then
         cd "$CONFIG_REPO_DIR"

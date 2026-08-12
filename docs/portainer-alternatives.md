@@ -18,6 +18,8 @@ Portainer handles four things in this project:
 
 The container's entrypoint script already pulls `litellm_config.yaml` (model mappings) from GitHub on every startup via the `CONFIG_REPO_URL` environment variable. This means **model mapping updates only need a container restart**, regardless of which tool manages the container. This works the same way with every alternative below.
 
+To disable config pull and manage config manually inside the container, set `CONFIG_REPO_URL=none`.
+
 The distinction matters: you need a tool that can **rebuild the image** when the Dockerfile changes (less frequent), but config updates are automatic on restart.
 
 ---
