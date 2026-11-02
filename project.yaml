@@ -1,0 +1,21 @@
+# Project metadata - keep in sync with README.md and CLAUDE.md
+# Updated by AI agents and developers; consumed by gittool and infra-webapp
+# See ~/work/docs/project-yaml.md for schema documentation
+
+name: claude-litellm-proxy
+status: low
+purpose: "LiteLLM proxy translating Anthropic API calls to free AI models"
+creator: rwood
+maintainer: rwood
+category: personal
+tech: ["python"]
+
+git:
+  initialized: true
+  remote: https://github.com/rrwood/claude_litellm_proxy.git
+  default_branch: main
+  last_commit: "2026-08-12"
+  dirty: false
+  gitmgmt: false
+  accounts:                       # GitHub login -> commit email (see ~/work/docs/project-yaml.md)
+    rrwood: 3016378+rrwood@users.noreply.github.com
