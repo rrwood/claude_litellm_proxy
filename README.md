@@ -145,6 +145,10 @@ The script auto-locates the LiteLLM install via Python and is safe to re-run. Fo
 - Confirmed on: **LiteLLM 1.83.14**
 - Upstream issue: [BerriAI/litellm#22797](https://github.com/BerriAI/litellm/issues/22797)
 
+## LiteLLM Streaming Patch
+
+LiteLLM 1.89.7 drops the first text or thinking chunk of each block when it streams replies in Anthropic format. Claude Code then shows replies with the first words missing, or empty. `scripts/patch-litellm-streaming.py` fixes this and runs automatically during the Docker build. It is safe to re-run, and prints a warning instead of failing if a newer LiteLLM has changed the code.
+
 ## Documentation
 
 - **[docs/PORTAINER.md](docs/PORTAINER.md)** - Complete Portainer deployment guide (Recommended)

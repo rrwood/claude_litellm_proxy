@@ -45,6 +45,10 @@ RUN pip install --no-cache-dir \
     pynacl websockets jsonschema \
     pydantic-settings redis boto3 rich
 
+# Fix LiteLLM dropping the first text/thinking chunk of each streamed block
+COPY scripts/patch-litellm-streaming.py /tmp/
+RUN python3 /tmp/patch-litellm-streaming.py && rm /tmp/patch-litellm-streaming.py
+
 # Switch to user
 USER ${USERNAME}
 WORKDIR /home/${USERNAME}
