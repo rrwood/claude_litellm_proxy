@@ -51,6 +51,19 @@ model_list:
       api_key: os.environ/GOOGLE_API_KEY
       drop_params: true
 
+  # TEMPORARY: wildcard routes for testing replacement models (remove after)
+  - model_name: "nvidia_nim/*"
+    litellm_params:
+      model: "nvidia_nim/*"
+      api_key: os.environ/NVIDIA_NIM_API_KEY
+      drop_params: true
+
+  - model_name: "openrouter/*"
+    litellm_params:
+      model: "openrouter/*"
+      api_key: os.environ/OPENROUTER_API_KEY
+      drop_params: true
+
 litellm_settings:
   drop_params: true
   fallbacks:
