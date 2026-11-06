@@ -1,6 +1,19 @@
 {
   "env": {
     "ANTHROPIC_BASE_URL": "http://PROXY_IP:4000",
-    "ANTHROPIC_API_KEY": "DUMMY_KEY"
-  }
+    "ANTHROPIC_AUTH_TOKEN": "DUMMY_KEY",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-5",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-5",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-4-5",
+    "ANTHROPIC_CUSTOM_MODEL_OPTION": "fallback",
+    "ANTHROPIC_CUSTOM_MODEL_OPTION_NAME": "Fallback (OpenRouter)",
+    "ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION": "Not on NVIDIA NIM. Use this to fix the proxy when the main models fail.",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS": "1",
+    "DISABLE_PROMPT_CACHING": "1",
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "128000",
+    "API_TIMEOUT_MS": "600000"
+  },
+  "model": "sonnet",
+  "fallbackModel": ["backup", "fallback"]
 }

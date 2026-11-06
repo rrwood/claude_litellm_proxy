@@ -87,13 +87,13 @@ On each client machine, point Claude Code at the proxy:
 **Windows (PowerShell):**
 ```powershell
 $env:ANTHROPIC_BASE_URL="http://YOUR_CONTAINER_IP:4000"
-$env:ANTHROPIC_API_KEY="DUMMY_KEY"
+$env:ANTHROPIC_AUTH_TOKEN="DUMMY_KEY"
 ```
 
 **Linux/Mac (Bash):**
 ```bash
 export ANTHROPIC_BASE_URL=http://YOUR_CONTAINER_IP:4000
-export ANTHROPIC_API_KEY=DUMMY_KEY
+export ANTHROPIC_AUTH_TOKEN=DUMMY_KEY
 ```
 
 ```bash
@@ -101,7 +101,7 @@ claude /logout  # Logout of claude.ai first
 claude          # Start using the proxy!
 ```
 
-See [docs/CLIENT_SETUP.md](docs/CLIENT_SETUP.md) for detailed client configuration.
+For a consistent setup across machines (model mapping, always-available fallback, settings for non-Anthropic models), use [claude-settings.example.json](claude-settings.example.json). See [docs/CLIENT_SETUP.md](docs/CLIENT_SETUP.md).
 
 ## Windows Quick Start
 
@@ -110,7 +110,7 @@ The `windows_scripts/` folder provides a one-command launcher for Windows users:
 1. **Copy** `windows_scripts/.env.example` to `windows_scripts/.env` and set your proxy IP:
    ```env
    ANTHROPIC_BASE_URL=http://YOUR_CONTAINER_IP:4000
-   ANTHROPIC_API_KEY=DUMMY_KEY
+   ANTHROPIC_AUTH_TOKEN=DUMMY_KEY
    ```
 
 2. **Run** the launcher from PowerShell:
@@ -158,21 +158,22 @@ The script auto-locates the LiteLLM install via Python and is safe to re-run. Fo
 
 | Claude Model | NIM Backend | Typical Speed |
 |---|---|---|
-| `claude-opus-5` | nvidia/nemotron-3-ultra-550b-a55b | ~3 sec |
-| `claude-sonnet-5` | deepseek-ai/deepseek-v4-flash-0731 | ~60 sec |
-| `claude-haiku-4-5` (default) | nvidia/llama-3.3-nemotron-super-49b-v1.5 | ~30 sec |
+| `claude-opus-5` | nvidia/nemotron-3-ultra-550b-a55b | ~2 sec |
+| `claude-sonnet-5` | nvidia/nemotron-3.5-super-vl-120b-a12b | ~2 sec |
+| `claude-haiku-4-5` (default) | nvidia/nemotron-3.5-lightning-30b-a3b | ~2 sec |
 
-Legacy model names (`claude-haiku-4-5-20251001`, `claude-sonnet-4-6`, `claude-opus-4-7`) are also supported as aliases.
+Other Claude names (`claude-opus-5-5`, `claude-sonnet-5-5`, `claude-haiku-5-5`, `claude-fable-5-1`, and older 4.x names) map to the same tiers. Speeds measured 2026-11-06.
 
-### Fallback Model (OpenRouter)
+### Fallback Chain
 
-If any NIM model fails (retired, rate-limited, down), LiteLLM automatically retries on OpenRouter:
+If a primary model fails (retired, rate-limited, down), LiteLLM retries down this chain:
 
-| Fallback | OpenRouter Backend | Typical Speed |
-|---|---|---|
-| `fallback` | nvidia/nemotron-3-super-120b-a12b:free | ~90 sec |
+| Step | Model name | Backend | Typical Speed |
+|---|---|---|---|
+| 1 | `backup` | NIM mistralai/mistral-large-4-1t-a52b | 8-26 sec |
+| 2 | `fallback` | OpenRouter `openrouter/free` (picks any available free model) | ~5 sec |
 
-The fallback is slow but keeps you working while you find replacement models. Requires `OPENROUTER_API_KEY`.
+`fallback` does not depend on NVIDIA NIM, so it keeps working when NIM models are retired. Requires `OPENROUTER_API_KEY`. Request `fallback-check` to confirm the chain works: it points at a model that does not exist, so it is always answered by a fallback.
 
 ### Additional Models
 
