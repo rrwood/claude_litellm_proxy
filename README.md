@@ -154,12 +154,15 @@ LiteLLM 1.89.7 has two streaming bugs when it sends replies in Anthropic format:
 
 `scripts/patch-litellm-streaming.py` fixes both and runs automatically during the Docker build. It is safe to re-run, and prints a warning instead of failing if a newer LiteLLM has changed the code.
 
+Full details: [docs/litellm-streaming-patch.md](docs/litellm-streaming-patch.md)
+
 ## Documentation
 
 - **[docs/PORTAINER.md](docs/PORTAINER.md)** - Complete Portainer deployment guide (Recommended)
 - **[docs/portainer-alternatives.md](docs/portainer-alternatives.md)** - Deploy without Portainer (Dockge, Coolify, plain Docker Compose)
 - **[docs/CLIENT_SETUP.md](docs/CLIENT_SETUP.md)** - Configure Claude Code clients
 - **[docs/litellm-output-config-patch.md](docs/litellm-output-config-patch.md)** - Patch for `output_config` leak to non-Anthropic providers
+- **[docs/litellm-streaming-patch.md](docs/litellm-streaming-patch.md)** - Patch for broken streamed replies (missing first words, "response stream was malformed")
 
 ## Available Models
 

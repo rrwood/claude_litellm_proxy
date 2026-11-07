@@ -216,3 +216,7 @@ Before upgrading LiteLLM, check whether the upstream bug has been resolved. Look
 release note mentioning `output_config` being stripped in the pass-through adapter for
 non-Anthropic providers. Once fixed upstream, remove the Dockerfile `RUN sed` lines to avoid
 double-patching.
+
+## Related Documents
+
+- [litellm-streaming-patch.md](litellm-streaming-patch.md) — the other LiteLLM patch used by this proxy (broken streamed replies)
