@@ -147,7 +147,12 @@ The script auto-locates the LiteLLM install via Python and is safe to re-run. Fo
 
 ## LiteLLM Streaming Patch
 
-LiteLLM 1.89.7 drops the first text or thinking chunk of each block when it streams replies in Anthropic format. Claude Code then shows replies with the first words missing, or empty. `scripts/patch-litellm-streaming.py` fixes this and runs automatically during the Docker build. It is safe to re-run, and prints a warning instead of failing if a newer LiteLLM has changed the code.
+LiteLLM 1.89.7 has two streaming bugs when it sends replies in Anthropic format:
+
+- It drops the first text or thinking chunk of each block, so Claude Code shows replies with the first words missing, or empty.
+- Some models (e.g. NVIDIA Nemotron) send the last thinking words and the first text words in one chunk. LiteLLM sends this as a thinking update inside a text block, and Claude Code fails with `API Error: response stream was malformed`.
+
+`scripts/patch-litellm-streaming.py` fixes both and runs automatically during the Docker build. It is safe to re-run, and prints a warning instead of failing if a newer LiteLLM has changed the code.
 
 ## Documentation
 
